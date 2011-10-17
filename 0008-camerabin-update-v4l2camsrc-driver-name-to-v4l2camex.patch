@@ -1,0 +1,22 @@
+From 9c586f5906571c22e8b6508f70026ed376e9a5a4 Mon Sep 17 00:00:00 2001
+From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
+Date: Fri, 29 Jan 2010 14:08:24 +0200
+Subject: [PATCH] camerabin: update v4l2camsrc driver name to v4l2camext
+
+---
+ gst/camerabin/gstcamerabin.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
+index 4f7d9ca..c5f5d29 100644
+--- a/gst/camerabin/gstcamerabin.c
++++ b/gst/camerabin/gstcamerabin.c
+@@ -210,7 +210,7 @@ static guint camerabin_signals[LAST_SIGNAL];
+ #define ZOOM_1X MIN_ZOOM
+ 
+ /* FIXME: this is v4l2camsrc specific */
+-#define DEFAULT_V4L2CAMSRC_DRIVER_NAME "omap3cam"
++#define DEFAULT_V4L2CAMSRC_DRIVER_NAME "v4l2camext"
+ 
+ #define DEFAULT_BLOCK_VIEWFINDER FALSE
+ #define DEFAULT_READY_FOR_CAPTURE TRUE

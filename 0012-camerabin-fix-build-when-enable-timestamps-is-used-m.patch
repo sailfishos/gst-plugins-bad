@@ -1,0 +1,47 @@
+From 20ca24db644fe3e227baf88f4c672478784ebcf1 Mon Sep 17 00:00:00 2001
+From: Teemu Katajisto <ext-teemu.katajisto@nokia.com>
+Date: Thu, 29 Apr 2010 12:41:53 +0300
+Subject: [PATCH] camerabin: fix build when enable-timestamps is used (maemo specific)
+
+---
+ gst/camerabin/gstcamerabin.c |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
+index a77480b..6e79ca2 100644
+--- a/gst/camerabin/gstcamerabin.c
++++ b/gst/camerabin/gstcamerabin.c
+@@ -674,6 +674,7 @@ camerabin_create_view_elements (GstCameraBin * camera)
+   GstBin *cbin = GST_BIN (camera);
+ 
+ #ifdef GST_TIMESTAMPS
++  const gchar *stamp_msg = "CAMERABIN VIEWFINDER STARTED";
+   GstPad *viewsink_pad = NULL;
+   gulong *viewsink_handler_id = g_new (gulong, 1);
+ #endif
+@@ -731,7 +732,7 @@ camerabin_create_view_elements (GstCameraBin * camera)
+       if (viewsink_pad != NULL) {
+         *viewsink_handler_id = gst_pad_add_buffer_probe (viewsink_pad,
+             G_CALLBACK (gst_camerabin_print_timestamp_for_buffer),
+-            "CAMERABIN VIEWFINDER STARTED");
++            (gpointer) stamp_msg);
+         g_object_set_data (G_OBJECT (viewsink_pad), "handler-id",
+             viewsink_handler_id);
+         gst_object_unref (GST_OBJECT (viewsink_pad));
+@@ -1775,6 +1776,7 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
+   gboolean ret = FALSE;
+ 
+ #ifdef GST_TIMESTAMPS
++  const gchar *stamp_msg = "CAMERABIN VIEWFINDER CONTINUE";
+   GstPad *viewsink_pad = NULL;
+   gulong *viewsink_handler_id = g_new (gulong, 1);
+ #endif
+@@ -1802,7 +1804,7 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
+       if (viewsink_pad != NULL) {
+         *viewsink_handler_id = gst_pad_add_buffer_probe (viewsink_pad,
+             G_CALLBACK (gst_camerabin_print_timestamp_for_buffer),
+-            "CAMERABIN VIEWFINDER CONTINUE");
++            (gpointer) stamp_msg);
+         g_object_set_data (G_OBJECT (viewsink_pad), "handler-id",
+             viewsink_handler_id);
+         gst_object_unref (GST_OBJECT (viewsink_pad));

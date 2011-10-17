@@ -1,0 +1,421 @@
+From 7a0804696388515b511c131b420438b7913ac850 Mon Sep 17 00:00:00 2001
+From: Teemu Katajisto <ext-teemu.katajisto@nokia.com>
+Date: Thu, 26 Nov 2009 14:36:20 +0200
+Subject: [PATCH] camerabin: add performance timestamping (Maemo-specific)
+
+---
+ configure.ac                             |    1 +
+ gst/camerabin/Makefile.am                |    3 +-
+ gst/camerabin/camerabinimage.c           |    4 +-
+ gst/camerabin/camerabinpreview.c         |    7 +--
+ gst/camerabin/camerabinvideo.c           |    6 +--
+ gst/camerabin/gstcamerabin-performance.h |   50 +++++++++++++++++++++++++
+ gst/camerabin/gstcamerabin.c             |   60 +++++++++++++++++++++++++-----
+ m4/gst-timestamps.m4                     |   13 ++++++
+ 8 files changed, 124 insertions(+), 20 deletions(-)
+ create mode 100644 gst/camerabin/gstcamerabin-performance.h
+ create mode 100644 m4/gst-timestamps.m4
+
+diff --git a/configure.ac b/configure.ac
+index 8fc939a..5a44f7d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -73,6 +73,7 @@ AG_GST_ARG_DEBUG
+ AG_GST_ARG_PROFILING
+ AG_GST_ARG_VALGRIND
+ AG_GST_ARG_GCOV
++AG_GST_TIMESTAMPS
+ 
+ AG_GST_ARG_EXAMPLES
+ 
+diff --git a/gst/camerabin/Makefile.am b/gst/camerabin/Makefile.am
+index d77dae4..d78b2fd 100644
+--- a/gst/camerabin/Makefile.am
++++ b/gst/camerabin/Makefile.am
+@@ -42,4 +42,5 @@ noinst_HEADERS = gstcamerabin.h             \
+ 		 camerabindebug.h           \
+ 		 camerabingeneral.h         \
+ 		 camerabinpreview.h         \
+-		 gstcamerabin-enum.h
++		 gstcamerabin-enum.h        \
++		 gstcamerabin-performance.h
+\ No newline at end of file
+diff --git a/gst/camerabin/camerabinimage.c b/gst/camerabin/camerabinimage.c
+index 8b94d7d..31a8ffd 100644
+--- a/gst/camerabin/camerabinimage.c
++++ b/gst/camerabin/camerabinimage.c
+@@ -47,7 +47,7 @@
+ /*
+  * includes
+  */
+-
++#include "gstcamerabin-performance.h"
+ #include <gst/gst.h>
+ 
+ #include "camerabinimage.h"
+@@ -634,6 +634,8 @@ done:
+ 
+   GST_DEBUG_OBJECT (imagebin, "linking finished %s", ret ? "OK" : "NOK");
+ 
++  CP ("IMAGEBIN ELEMENTS CREATED");
++
+   return ret;
+ }
+ 
+diff --git a/gst/camerabin/camerabinpreview.c b/gst/camerabin/camerabinpreview.c
+index 028297e..bfa44b0 100644
+--- a/gst/camerabin/camerabinpreview.c
++++ b/gst/camerabin/camerabinpreview.c
+@@ -18,9 +18,7 @@
+ * Boston, MA 02111-1307, USA.
+ */
+ 
+-#ifdef HAVE_CONFIG_H
+-#include "config.h"
+-#endif
++#include "gstcamerabin-performance.h"
+ 
+ #include <gst/gst.h>
+ #include <string.h>
+@@ -202,6 +200,7 @@ gst_camerabin_preview_convert (GstCameraBin * camera,
+     GST_WARNING ("pipeline is NULL");
+     goto no_pipeline;
+   }
++  CP ("CAMERABIN PREVIEW IMAGE CREATE");
+ 
+   src = gst_bin_get_by_name (GST_BIN (pipeline), "prev_src");
+   sink = gst_bin_get_by_name (GST_BIN (pipeline), "prev_sink");
+@@ -277,7 +276,7 @@ done:
+     gst_object_unref (src);
+   if (sink)
+     gst_object_unref (sink);
+-
++  CP ("CAMERABIN PREVIEW IMAGE CREATED");
+   return result;
+ 
+   /* ERRORS */
+diff --git a/gst/camerabin/camerabinvideo.c b/gst/camerabin/camerabinvideo.c
+index 3ccf22d..c7fee88 100644
+--- a/gst/camerabin/camerabinvideo.c
++++ b/gst/camerabin/camerabinvideo.c
+@@ -55,16 +55,13 @@
+ #include "config.h"
+ #endif
+ 
++#include "gstcamerabin-performance.h"
+ #include <gst/gst.h>
+ #include "camerabindebug.h"
+ #include "camerabingeneral.h"
+ 
+ #include "camerabinvideo.h"
+ 
+-/*
+- * defines and static global vars
+- */
+-
+ /* internal element names */
+ 
+ #define DEFAULT_AUD_ENC "vorbisenc"
+@@ -684,6 +681,7 @@ gst_camerabin_video_create_elements (GstCameraBinVideo * vid)
+         G_CALLBACK (camerabin_video_pad_aud_src_have_buffer), vid);
+     gst_object_unref (pad);
+   }
++  CP ("VIDEOBIN ELEMENTS CREATED");
+   GST_DEBUG ("created video elements");
+ 
+   return TRUE;
+diff --git a/gst/camerabin/gstcamerabin-performance.h b/gst/camerabin/gstcamerabin-performance.h
+new file mode 100644
+index 0000000..f9924e6
+--- /dev/null
++++ b/gst/camerabin/gstcamerabin-performance.h
+@@ -0,0 +1,50 @@
++/*
++ * GStreamer
++ * Copyright (C) 2009 Nokia Corporation <multimedia@maemo.org>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Library General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Library General Public License for more details.
++ *
++ * You should have received a copy of the GNU Library General Public
++ * License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++#ifndef __GST_CAMERABIN_PERFORMANCE_H__
++#define __GST_CAMERABIN_PERFORMANCE_H__
++
++#ifdef HAVE_CONFIG_H
++#   include <config.h>
++#endif
++
++/*
++ * performance timestamping
++ */
++#ifdef GST_TIMESTAMPS
++#   ifndef ENTER
++#       include <stdio.h>
++#       include <sys/time.h>
++#       include <time.h>
++#       define TIMESTAMP struct timeval timestamp_for_time_tracking; gettimeofday(&timestamp_for_time_tracking,NULL);
++#       define TIMESTAMPLONG (timestamp_for_time_tracking.tv_sec*1000000ll+timestamp_for_time_tracking.tv_usec)
++#       define ENTER { TIMESTAMP; fprintf(stderr,"ENTERING:%s:%lli:\n",__func__,TIMESTAMPLONG); };
++#       define LEAVE { TIMESTAMP; fprintf(stderr,"LEAVING:%s:%i:%lli:\n",__func__,__LINE__,TIMESTAMPLONG);  };
++#       define CP(name) { TIMESTAMP; fprintf(stderr,"CHECKPOINT:%s:%s:%i:%lli:\n",name,__func__,__LINE__,TIMESTAMPLONG);  };
++#   endif
++#else
++#   define TIMESTAMP
++#   define TIMESTAMPLONG
++#   define ENTER
++#   define LEAVE
++#   define CP(name)
++#endif
++
++
++#endif /* #ifndef __CAMERABIN_PERFORMANCE_H__ */
+diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
+index e08f7bf..6dec7fa 100644
+--- a/gst/camerabin/gstcamerabin.c
++++ b/gst/camerabin/gstcamerabin.c
+@@ -141,10 +141,7 @@
+ /*
+  * includes
+  */
+-
+-#ifdef HAVE_CONFIG_H
+-#  include <config.h>
+-#endif
++#include "gstcamerabin-performance.h"
+ 
+ #include <string.h>
+ #include <stdlib.h>
+@@ -816,7 +813,7 @@ camerabin_create_elements (GstCameraBin * camera)
+   ret = TRUE;
+ 
+ done:
+-
++  CP ("CAMERABIN ELEMENTS CREATED");
+   if (FALSE == ret)
+     camerabin_destroy_elements (camera);
+ 
+@@ -1004,6 +1001,7 @@ gst_camerabin_change_mode (GstCameraBin * camera, gint mode)
+ {
+   if (camera->mode != mode || !camera->active_bin) {
+     GstState state, pending_state;
++    CP ("CAMERABIN MODE CHANGE");
+ 
+     GST_DEBUG_OBJECT (camera, "setting mode: %d (old_mode=%d)",
+         mode, camera->mode);
+@@ -1044,6 +1042,7 @@ gst_camerabin_change_mode (GstCameraBin * camera, gint mode)
+       gst_camerabin_image_prepare_elements (GST_CAMERABIN_IMAGE
+           (camera->imgbin));
+     }
++    CP ("CAMERABIN MODE CHANGED");
+   }
+ }
+ 
+@@ -1630,6 +1629,7 @@ gst_camerabin_start_video_recording (GstCameraBin * camera)
+    * use a queue overrun signal?
+    */
+   GST_INFO_OBJECT (camera, "starting video capture");
++  CP ("CAMERABIN START VIDEO RECORDING");
+ 
+   /* check if need to update video capture caps */
+   if (camera->video_capture_caps_update) {
+@@ -1656,7 +1656,6 @@ gst_camerabin_start_video_recording (GstCameraBin * camera)
+             "capture-mode")) {
+       g_object_set (G_OBJECT (camera->src_vid_src), "capture-mode", 2, NULL);
+     }
+-
+     /* videobin will not go to playing if file is not writable */
+     if (gst_element_set_state (GST_ELEMENT (camera), GST_STATE_PLAYING) ==
+         GST_STATE_CHANGE_FAILURE) {
+@@ -1671,6 +1670,8 @@ gst_camerabin_start_video_recording (GstCameraBin * camera)
+     } else {
+       gst_element_set_locked_state (camera->vidbin, TRUE);
+     }
++
++    CP ("CAMERABIN VIDEO RECORDING STARTED");
+   } else {
+     GST_WARNING_OBJECT (camera, "videobin state change failed");
+     gst_element_set_state (camera->vidbin, GST_STATE_NULL);
+@@ -1752,7 +1753,7 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
+   gboolean ret = FALSE;
+ 
+   GST_DEBUG_OBJECT (camera, "creating preview");
+-
++  CP ("CAMERABIN CREATE PREVIEW");
+   pipeline = (camera->mode == MODE_IMAGE) ?
+       camera->preview_pipeline : camera->video_preview_pipeline;
+   prev = gst_camerabin_preview_convert (camera, pipeline, buffer);
+@@ -1772,6 +1773,7 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
+       GST_WARNING_OBJECT (camera,
+           "This element has no bus, therefore no message sent!");
+     }
++    CP ("CAMERABIN PREVIEW SENT");
+     ret = TRUE;
+   }
+ 
+@@ -1921,6 +1923,7 @@ gst_camerabin_have_src_buffer (GstPad * pad, GstBuffer * buffer,
+   g_cond_signal (camera->cond);
+   g_mutex_unlock (camera->capture_mutex);
+ 
++  CP ("CAMERABIN SEND IMAGE CAPTURED");
+   msg = gst_message_new_element (GST_OBJECT (camera),
+       gst_structure_new (IMG_CAPTURED_MESSAGE_NAME, NULL));
+ 
+@@ -2419,6 +2422,7 @@ gst_camerabin_finish_image_capture (GstCameraBin * camera)
+     camera->base_crop_bottom = 0;
+     gst_camerabin_set_capsfilter_caps (camera, camera->view_finder_caps);
+   }
++  CP ("CAMERABIN IMAGE CAPTURE FINISHED");
+ }
+ 
+ /*
+@@ -3264,7 +3268,7 @@ static void
+ gst_camerabin_init (GstCameraBin * camera, GstCameraBinClass * gclass)
+ {
+   /* GstElementClass *klass = GST_ELEMENT_GET_CLASS (camera); */
+-
++  ENTER;
+   camera->filename = g_string_new ("");
+   camera->mode = DEFAULT_MODE;
+   camera->flags = DEFAULT_FLAGS;
+@@ -3377,6 +3381,7 @@ static void
+ gst_camerabin_finalize (GObject * object)
+ {
+   G_OBJECT_CLASS (parent_class)->finalize (object);
++  LEAVE;
+ }
+ 
+ static void
+@@ -3794,7 +3799,9 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
+ {
+   GstCameraBin *camera = GST_CAMERABIN (element);
+   GstStateChangeReturn ret;
+-
++#ifdef GST_TIMESTAMPS
++  gboolean measure = FALSE;
++#endif
+   GST_DEBUG_OBJECT (element, "changing state: %s -> %s",
+       gst_element_state_get_name (GST_STATE_TRANSITION_CURRENT (transition)),
+       gst_element_state_get_name (GST_STATE_TRANSITION_NEXT (transition)));
+@@ -3816,6 +3823,10 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
+     case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
+       /* If using autovideosink, set view finder sink properties
+          now that actual sink has been created. */
++#ifdef GST_TIMESTAMPS
++      CP ("CAMERABIN STARTING VIEWFINDER");
++      measure = TRUE;
++#endif
+       camerabin_setup_view_elements (camera);
+       break;
+     case GST_STATE_CHANGE_READY_TO_NULL:
+@@ -3879,6 +3890,12 @@ done:
+       gst_element_state_get_name (GST_STATE_TRANSITION_NEXT (transition)),
+       gst_element_state_change_return_get_name (ret));
+ 
++#ifdef GST_TIMESTAMPS
++  if (measure) {
++    CP ("CAMERABIN VIEWFINDER STARTED");
++  }
++#endif
++
+   return ret;
+ }
+ 
+@@ -3926,9 +3943,9 @@ gst_camerabin_imgbin_finished (gpointer u_data)
+   CAMERABIN_PROCESSING_DEC (camera);
+ 
+   /* Send image-done signal */
++  CP ("CAMERABIN IMAGE ENCODING FINISHED");
+   gst_camerabin_image_capture_continue (camera, filename);
+   g_free (filename);
+-
+   /* Set image bin back to PAUSED so that buffer-allocs don't fail */
+   gst_element_set_state (camera->imgbin, GST_STATE_PAUSED);
+ 
+@@ -3950,6 +3967,10 @@ static void
+ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
+ {
+   GstCameraBin *camera = GST_CAMERABIN (bin);
++#ifdef GST_TIMESTAMPS
++  const GstStructure *st;
++  gint status;
++#endif
+ 
+   switch (GST_MESSAGE_TYPE (msg)) {
+     case GST_MESSAGE_EOS:
+@@ -3957,6 +3978,7 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
+         /* Video eos */
+         GST_DEBUG_OBJECT (camera,
+             "got video eos message, stopping video capture");
++        CP ("CAMERABIN VIDEO RECORDING STOPPED");
+         g_mutex_lock (camera->capture_mutex);
+         camera->capturing = FALSE;
+         g_cond_signal (camera->cond);
+@@ -3993,6 +4015,22 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
+       g_mutex_unlock (camera->capture_mutex);
+       break;
+     default:
++#ifdef GST_TIMESTAMPS
++      st = gst_message_get_structure (msg);
++      if (st) {
++        if (gst_structure_has_name (st, "photo-capture-start")) {
++          CP ("CAMERABIN SOURCE CAPTURE START");
++        } else if (gst_structure_has_name (st, "photo-capture-end")) {
++          CP ("CAMERABIN SOURCE CAPTURE END");
++        } else if (gst_structure_has_name (st, "autofocus-done")) {
++          if (gst_structure_get_int (st, "status", &status)) {
++            if (status == GST_PHOTOGRAPHY_FOCUS_STATUS_SUCCESS) {
++              CP ("CAMERABIN AUTOFOCUS DONE");
++            }
++          }
++        }
++      }
++#endif
+       break;
+   }
+   GST_BIN_CLASS (parent_class)->handle_message (bin, msg);
+@@ -4007,6 +4045,7 @@ gst_camerabin_capture_start (GstCameraBin * camera)
+ {
+ 
+   GST_INFO_OBJECT (camera, "starting capture");
++  CP ("CAMERABIN CAPTURE START");
+   if (camera->paused) {
+     gst_camerabin_capture_pause (camera);
+     return;
+@@ -4062,6 +4101,7 @@ gst_camerabin_capture_start (GstCameraBin * camera)
+ static void
+ gst_camerabin_capture_stop (GstCameraBin * camera)
+ {
++  CP ("CAMERABIN CAPTURE STOP");
+   if (camera->active_bin == camera->vidbin) {
+     GST_INFO_OBJECT (camera, "stopping video capture");
+     gst_camerabin_do_stop (camera);
+diff --git a/m4/gst-timestamps.m4 b/m4/gst-timestamps.m4
+new file mode 100644
+index 0000000..ec2c9fb
+--- /dev/null
++++ b/m4/gst-timestamps.m4
+@@ -0,0 +1,13 @@
++AC_DEFUN([AG_GST_TIMESTAMPS], [
++AC_ARG_ENABLE(timestamps,
++AC_HELP_STRING([--enable-timestamps],[enable printing timestamp information to stderr]),
++[case "${enableval}" in
++  yes) USE_TIMESTAMPS=yes ;;
++  no)  USE_TIMESTAMPS=no ;;
++  *) AC_MSG_ERROR(bad value ${enableval} for --enable-timestamps) ;;
++esac],
++[USE_TIMESTAMPS=no]) dnl Default value
++if test x$USE_TIMESTAMPS = xyes; then
++  AC_DEFINE(GST_TIMESTAMPS, 1, [Define if TIMESTAMPS statements should be compiled in])
++fi
++])

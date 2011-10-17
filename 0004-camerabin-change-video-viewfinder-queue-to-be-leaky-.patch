@@ -1,0 +1,24 @@
+From 04149c31f9daf535934658c3f931a94aa77308cf Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tommi=20My=C3=B6h=C3=A4nen?= <ext-tommi.1.myohanen@nokia.com>
+Date: Thu, 13 Aug 2009 10:33:07 +0300
+Subject: [PATCH] camerabin: change video viewfinder queue to be leaky upstream (Maemo specific)
+
+Leaking upstream buffers instead of downstream ones seem to give a small
+performance boost for video recording.
+---
+ gst/camerabin/camerabinvideo.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/gst/camerabin/camerabinvideo.c b/gst/camerabin/camerabinvideo.c
+index 6b0ed10..afd36b7 100644
+--- a/gst/camerabin/camerabinvideo.c
++++ b/gst/camerabin/camerabinvideo.c
+@@ -668,7 +668,7 @@ gst_camerabin_video_create_elements (GstCameraBinVideo * vid)
+   }
+   /* Set queue leaky, we don't want to block video encoder feed, but
+      prefer leaking view finder buffers instead. */
+-  g_object_set (G_OBJECT (queue), "leaky", 2, "max-size-buffers", 1, "silent",
++  g_object_set (G_OBJECT (queue), "leaky", 1, "max-size-buffers", 1, "silent",
+       TRUE, NULL);
+ 
+   /* Set up src ghost pad for video bin */

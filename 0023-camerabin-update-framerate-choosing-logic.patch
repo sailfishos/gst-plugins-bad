@@ -1,0 +1,72 @@
+From 9792cbed148ba08cc1ef2c7aa990d16d9870b662 Mon Sep 17 00:00:00 2001
+From: Hoseok Chang <hoseok.chang@nokia.com>
+Date: Tue, 2 Nov 2010 17:15:39 +0200
+Subject: [PATCH] camerabin: update framerate choosing logic
+
+When there is no proper caps which have the desired aspect ratio,
+gst_camerabin_set_allowed_framerate returns caps without framerate. This may
+cause a problem in certain cases. Because the capsfilter uses last used
+framerate if there is no framerate specified in the new caps. So the framerate
+choosing logic is updated to choose the framerate as long as there is
+an intersect between the allowed and the desired resolution.
+---
+ gst/camerabin/gstcamerabin.c |   19 ++++++++++++++++++-
+ 1 files changed, 18 insertions(+), 1 deletions(-)
+
+diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
+index 5e87b54..14481fb 100644
+--- a/gst/camerabin/gstcamerabin.c
++++ b/gst/camerabin/gstcamerabin.c
+@@ -2245,7 +2245,8 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
+     GstCaps * filter_caps)
+ {
+   GstStructure *structure;
+-  GstCaps *allowed_caps = NULL, *intersect = NULL, *tmp_caps = NULL;
++  GstCaps *allowed_caps = NULL, *allowed_caps_copied = NULL, *intersect =
++      NULL, *tmp_caps = NULL;
+   const GValue *framerate = NULL;
+   guint caps_size, i;
+   guint32 format = 0;
+@@ -2282,6 +2283,7 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
+   }
+   GST_LOG_OBJECT (camera, "aspect ratio of requested resolution (%dx%d): %lf",
+       w, h, requested_ar);
++  allowed_caps_copied = gst_caps_copy (allowed_caps);
+   gst_camerabin_filter_aspect_ratios_from_caps (camera, requested_ar,
+       allowed_caps);
+ 
+@@ -2292,6 +2294,14 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
+ 
+   /* Find the best framerate from the caps */
+   caps_size = gst_caps_get_size (intersect);
++  if (caps_size == 0) {
++    /* Intersect against the original allowed caps when no intersect found
++       This may produce non-optimal caps but better than nothing */
++    gst_caps_unref (intersect);
++    intersect = gst_caps_intersect (allowed_caps_copied, tmp_caps);
++    caps_size = gst_caps_get_size (intersect);
++  }
++
+   for (i = 0; i < caps_size; i++) {
+     structure = gst_caps_get_structure (intersect, i);
+     if (camera->night_mode || camera->fps_n == 0 || camera->fps_d == 0
+@@ -2315,12 +2325,19 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
+         "framerate", GST_TYPE_FRACTION,
+         gst_value_get_fraction_numerator (framerate),
+         gst_value_get_fraction_denominator (framerate), NULL);
++  } else {
++    GST_WARNING_OBJECT (camera,
++        "no proper framerate found, returning caps without framerate:%"
++        GST_PTR_FORMAT, filter_caps);
+   }
+ 
+   /* Unref helper caps */
+   if (allowed_caps) {
+     gst_caps_unref (allowed_caps);
+   }
++  if (allowed_caps_copied) {
++    gst_caps_unref (allowed_caps_copied);
++  }
+   if (intersect) {
+     gst_caps_unref (intersect);
+   }

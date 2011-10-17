@@ -1,0 +1,75 @@
+* Thu Sep 29 2011 Marko Saukko <marko.saukko@cybercom.com> - 0.10.21
+- Removed some unwanted dependencies.
+
+* Tue May 31 2011 vivian zhang <vivian.zhang@intel.com> - 0.10.21
+- Removed 0001-02_wildmidi-config.patch to fix wildmidi config file path issue (BMC #18312)
+
+* Sun May 22 2011 vivian zhang <vivian.zhang@intel.com> - 0.10.21
+- Add vp8 plugin (BMC #17886)
+
+* Wed May 18 2011 vivian zhang <vivian.zhang@intel.com> - 0.10.21
+- Add real plugin (BMC #17884)
+
+* Wed Apr 06 2011 vivian zhang <vivian.zhang@intel.com> - 0.10.21
+- Add videomaxrate element(LGPL) (BMC #15198)
+
+* Mon Mar 14 2011 Yan Yin <yan.yin@intel.com> - 0.10.21
+- Add shm plugins (BMC #14399)
+- Change /bin/sh to /bin/bash in gst-p-bad-cleanup.sh due to pushd is not supported by Ubuntu default dash shell
+
+* Wed Feb 09 2011 Ling Yue <ling.yue@intel.com> - 0.10.21
+- Allow audioparserbad element (FEA #13330)
+
+* Sat Jan 22 2011 Ling Yue <ling.yue@intel.com> - 0.10.21
+- Update to latest upstream version (FEA #10764)
+
+* Mon Jan 17 2011 Ling Yue <ling.yue@intel.com> - 0.10.21
+- Update to latest upstream version (0.10.20.4) (FEA #10764)
+- Remove old 0004 to 0049 patches
+- Integrate 0001 to 0023 patches from latest gitorious and drop OMAP specific patch
+- Update patch 0100-extend-photography-iface.patch accordingly
+
+* Wed Jan 05 2011 Vivian Zhang <vivian.zhang@intel.com> - 0.10.20
+- Updated patch 0100-extend-photography-iface.patch to update photography interface (BMC #11910)
+
+* Thu Dec 16 2010 Vivian Zhang <vivian.zhang@intel.com> - 0.10.20
+- Updated patch 0022-photography-add-zoom-property.patch from upstream which is required by new release of gst-v4l2-camsrc (BMC #10669)
+
+* Thu Dec 02 2010 Vivian Zhang <vivian.zhang@intel.com> - 0.10.20
+- Add 0100-extend-photography-iface.patch from upstream which is required by new release of gst-v4l2-camsrc (BMC #10669)
+
+* Fri Nov 26 2010 Ling Yue <ling.yue@intel.com> - 0.10.20
+- Add wildmidi element and put it into new -extras sub-package FEA#4095 (BMC#9794)
+- Remove empty -doc sub package to avoid rpmlint warning
+
+* Wed Nov 24 2010 Teemu Tuominen <teemu.tuominen@cybercom.com> - 0.10.20
+- Allow metadata for element metadatamux (ext/metadata) FEA#7623
+
+* Thu Oct 28 2010 Vivian Zhang <vivian.zhang@intel.com> - 0.10.20
+- Remove requires for gst-v412-camsrc to solve the unresolvable build failure
+
+* Mon Oct 25 2010 Vivian Zhang <vivian.zhang@intel.com> - 0.10.20
+- Add Requires: gst-v4l2-camsrc
+
+* Wed Oct 13 2010 Vivian Zhang <vivian.zhang@intel.com> - 0.10.20
+- Added 44 camerabin patches from meego.gitorious.org/maemo-multimedia which are required by gst-nokia-videosrc
+
+* Tue Sep 21 2010 Ling Yue <ling.yue@intel.com> - 0.10.20
+- Fix BMC#6504 to allow elements: autoconvert, camerabin, debugutils, h264parse,  jpegformat, rawparse, selector, qtmux
+
+* Thu Sep 09 2010 Ling Yue <ling.yue@intel.com> - 0.10.20
+- Fix gst-plugins-bad-free part of BMC#6520
+- Upgrade to 0.10.20.
+- Add --enable-orc, dependency change from liboil to orc
+- Add --disable-nls to reduce size 
+- Add new sub package doc but empty with configure option --disable-gtk-doc for now
+
+* Mon Jul 12 2010 Bin Gao <bin.gao@intel.com> - 0.10.19
+- Update to 0.10.19
+- Allow element "sdp"
+
+* Thu May 06 2010 Bin Gao <bin.gao@intel.com> - 0.10.18
+- Allowed 3 elements liveadder rtpmux and dtmf requested from BMC# 532.
+
+* Tue Apr 27 2010 Bin Gao <bin.gao@intel.com> - 0.10.18
+- First integration for MeeGo

@@ -1,0 +1,46 @@
+From abfcea2e7d8ae2c8ed95acb5c498b664bdad2ce0 Mon Sep 17 00:00:00 2001
+From: Hoseok Chang <hoseok.chang@nokia.com>
+Date: Mon, 20 Sep 2010 14:33:50 +0300
+Subject: [PATCH] camerabin: viewfinder-mode setting for subdevsrc
+
+---
+ gst/camerabin/gstcamerabin.c |   19 +++++++++++++++++++
+ 1 files changed, 19 insertions(+), 0 deletions(-)
+
+diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
+index 518f6b0..11f8681 100644
+--- a/gst/camerabin/gstcamerabin.c
++++ b/gst/camerabin/gstcamerabin.c
+@@ -642,6 +642,15 @@ camerabin_create_src_elements (GstCameraBin * camera)
+     }
+   }
+ 
++  /* Set "viewfinder-mode" for subdevsrc */
++  /* FIXME: subdevsrc specific */
++  if (camera->src_vid_src &&
++      g_object_class_find_property (G_OBJECT_GET_CLASS (camera->src_vid_src),
++          "viewfinder-mode")) {
++    g_object_set (G_OBJECT (camera->src_vid_src), "viewfinder-mode",
++        (camera->mode == MODE_IMAGE) ? 0 : 1, NULL);
++  }
++
+   ret = TRUE;
+ done:
+   return ret;
+@@ -1074,6 +1083,16 @@ gst_camerabin_change_mode (GstCameraBin * camera, gint mode)
+       } else if (camera->mode == MODE_VIDEO) {
+         camera->active_bin = camera->vidbin;
+       }
++
++      /* Set "viewfinder-mode" for subdevsrc */
++      /* FIXME: subdevsrc specific */
++      if (camera->src_vid_src &&
++          g_object_class_find_property (G_OBJECT_GET_CLASS
++              (camera->src_vid_src), "viewfinder-mode")) {
++        g_object_set (G_OBJECT (camera->src_vid_src), "viewfinder-mode",
++            (camera->mode == MODE_IMAGE) ? 0 : 1, NULL);
++      }
++
+       gst_camerabin_reset_to_view_finder (camera);
+     } else if (camera->mode == MODE_IMAGE) {
+       /* Prepare needed elements for image processing */

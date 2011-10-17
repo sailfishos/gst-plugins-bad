@@ -1,0 +1,43 @@
+diff --git a/gst-libs/gst/interfaces/photography.c b/gst-libs/gst/interfaces/photography.c
+index 0f52a32..1bd91f0 100644
+--- a/gst-libs/gst/interfaces/photography.c
++++ b/gst-libs/gst/interfaces/photography.c
+@@ -670,6 +670,12 @@ gst_photography_iface_class_init (gpointer g_class)
+           "How much the resulted image will be zoomed",
+           1.0f, 10.0f, 1.0f, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+ 
++  /* Autofocus */
++  g_object_interface_install_property (g_class,
++      g_param_spec_boolean (GST_PHOTOGRAPHY_PROP_AUTOFOCUS, "autofocus",
++          "Set true to start autofocus sequence and false to interrupt it",
++          FALSE, G_PARAM_READWRITE));
++
+   /* Noise Reduction, Bayer an YCC noise reduction are enabled by default */
+   g_object_interface_install_property (g_class,
+       g_param_spec_flags (GST_PHOTOGRAPHY_PROP_NOISE_REDUCTION,
+diff --git a/gst-libs/gst/interfaces/photography.h b/gst-libs/gst/interfaces/photography.h
+index b2037cc..9b87e14 100644
+--- a/gst-libs/gst/interfaces/photography.h
++++ b/gst-libs/gst/interfaces/photography.h
+@@ -71,6 +71,7 @@ G_BEGIN_DECLS
+ #define GST_PHOTOGRAPHY_PROP_FLICKER_MODE "flicker-mode"
+ #define GST_PHOTOGRAPHY_PROP_FOCUS_MODE   "focus-mode"
+ #define GST_PHOTOGRAPHY_PROP_ZOOM   "zoom"
++#define GST_PHOTOGRAPHY_PROP_AUTOFOCUS    "autofocus"
+ 
+ /**
+  * GstPhotography:
+diff --git a/gst/camerabin/gstcamerabin-enum.h b/gst/camerabin/gstcamerabin-enum.h
+index 69d7ba2..21b6ab8 100644
+--- a/gst/camerabin/gstcamerabin-enum.h
++++ b/gst/camerabin/gstcamerabin-enum.h
+@@ -69,7 +69,8 @@ enum
+   ARG_VIDEO_CAPTURE_FRAMERATE,
+   ARG_PREVIEW_SOURCE_FILTER,
+   ARG_READY_FOR_CAPTURE,
+-  ARG_IDLE
++  ARG_IDLE,
++  ARG_AUTOFOCUS
+ };
+ 
+ /**

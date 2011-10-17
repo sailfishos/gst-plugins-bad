@@ -1,0 +1,137 @@
+From 9fa709c4b23e227bba408eed00ebb0d3a8fa57a3 Mon Sep 17 00:00:00 2001
+From: Lauri Lehtinen <ext-lauri.1.lehtinen@nokia.com>
+Date: Fri, 5 Mar 2010 10:21:10 +0200
+Subject: [PATCH] GstPhotography: Added operation mode to photography API
+
+---
+ gst-libs/gst/interfaces/photography.c |   56 +++++++++++++++++++++++++++++++++
+ gst-libs/gst/interfaces/photography.h |   17 +++++++++-
+ 2 files changed, 72 insertions(+), 1 deletions(-)
+
+diff --git a/gst-libs/gst/interfaces/photography.c b/gst-libs/gst/interfaces/photography.c
+index 6fcf0d9..503d3f2 100644
+--- a/gst-libs/gst/interfaces/photography.c
++++ b/gst-libs/gst/interfaces/photography.c
+@@ -104,6 +104,8 @@ gst_photography_iface_base_init (GstPhotographyInterface * iface)
+   iface->set_autofocus = NULL;
+   iface->set_config = NULL;
+   iface->get_config = NULL;
++  iface->set_format = NULL;
++  iface->get_format = NULL;
+ }
+ 
+ #define GST_PHOTOGRAPHY_FUNC_TEMPLATE(function_name, param_type) \
+@@ -498,6 +500,60 @@ gst_photography_get_config (GstPhotography * photo, GstPhotoSettings * config)
+   return ret;
+ }
+ 
++/**
++ * gst_photography_set_format:
++ * @photo: #GstPhotography interface of a #GstElement
++ * @op_mode: #GstOperationMode operation mode to set
++ * @op_mode_caps: #GstCaps containing the op_mode caps
++ *
++ * Set caps for given operation mode
++ *
++ * Returns: TRUE if operation mode was set successfully, otherwise FALSE.
++ */
++gboolean
++gst_photography_set_format (GstPhotography * photo,
++    GstOperationMode op_mode, GstCaps * op_mode_caps)
++{
++  GstPhotographyInterface *iface;
++  gboolean ret = FALSE;
++
++  g_return_val_if_fail (photo != NULL, FALSE);
++
++  iface = GST_PHOTOGRAPHY_GET_IFACE (photo);
++  if (iface->set_format) {
++    ret = iface->set_format (photo, op_mode, op_mode_caps);
++  }
++
++  return ret;
++}
++
++/**
++ * gst_photography_get_format:
++ * @photo: #GstPhotography interface of a #GstElement
++ * @op_mode: #GstOperationMode operation mode of which caps to get
++ *
++ * Get given operation mode mode caps
++ *
++ * Returns: A pointer to #GstCaps
++ */
++GstCaps *
++gst_photography_get_format (GstPhotography * photo, GstOperationMode op_mode)
++{
++  GstPhotographyInterface *iface;
++  GstCaps *ret;
++
++  g_return_val_if_fail (photo != NULL, NULL);
++
++  iface = GST_PHOTOGRAPHY_GET_IFACE (photo);
++  if (iface->get_format) {
++    ret = iface->get_format (photo, op_mode);
++  } else {
++    ret = NULL;
++  }
++  return ret;
++}
++
++
+ /* Photography class initialization stuff */
+ static void
+ gst_photography_iface_class_init (gpointer g_class)
+diff --git a/gst-libs/gst/interfaces/photography.h b/gst-libs/gst/interfaces/photography.h
+index 0198788..bb1f8a0 100644
+--- a/gst-libs/gst/interfaces/photography.h
++++ b/gst-libs/gst/interfaces/photography.h
+@@ -203,6 +203,12 @@ typedef enum {
+     GST_PHOTOGRAPHY_FOCUS_MODE_CONTINUOUS_EXTENDED,
+ } GstFocusMode;
+ 
++typedef enum {
++    GST_PHOTOGRAPHY_OPERATION_MODE_VIEWFINDER = 0,
++    GST_PHOTOGRAPHY_OPERATION_MODE_IMAGE_CAPTURE,
++    GST_PHOTOGRAPHY_OPERATION_MODE_PREVIEW,
++} GstOperationMode;
++
+ typedef struct
+ {
+   GstWhiteBalanceMode wb_mode;
+@@ -260,6 +266,8 @@ typedef void (*GstPhotoCapturePrepared) (gpointer data,
+  * @set_config: vmethod to set all configuration parameters at once
+  * @get_config: vmethod to get all configuration parameters at once
+  * @get_image_capture_supported_caps: vmethod to get caps describing supported image capture formats
++ * @set_format: vmethod to set caps for given operation mode
++ * @get_format: vmethod to get current caps for given operation mode
+  *
+  * #GstPhotographyInterface interface.
+  */
+@@ -310,11 +318,13 @@ typedef struct _GstPhotographyInterface
+   void (*set_autofocus) (GstPhotography * photo, gboolean on);
+   gboolean (*set_config) (GstPhotography * photo, GstPhotoSettings * config);
+   gboolean (*get_config) (GstPhotography * photo, GstPhotoSettings * config);
+-
+   gboolean (*get_noise_reduction) (GstPhotography * photo,
+     GstPhotographyNoiseReduction * noise_reduction);
+   gboolean (*set_noise_reduction) (GstPhotography * photo,
+     GstPhotographyNoiseReduction noise_reduction);
++  gboolean (*set_format) (GstPhotography * photo,
++      GstOperationMode op_mode, GstCaps * op_mode_caps);
++  GstCaps * (*get_format) (GstPhotography * photo, GstOperationMode op_mode);
+ 
+   /*< private > */
+   gpointer _gst_reserved[GST_PADDING];
+@@ -381,6 +391,11 @@ gboolean gst_photography_set_config (GstPhotography * photo,
+ gboolean gst_photography_get_config (GstPhotography * photo,
+     GstPhotoSettings * config);
+ 
++gboolean gst_photography_set_format (GstPhotography * photo,
++    GstOperationMode op_mode, GstCaps * op_mode_caps);
++GstCaps * gst_photography_get_format (GstPhotography * photo,
++    GstOperationMode op_mode);
++
+ G_END_DECLS
+ 
+ #endif /* __GST_PHOTOGRAPHY_H__ */

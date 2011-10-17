@@ -1,0 +1,41 @@
+From cd64102ef577dd1eac3155b1ec5378f4325ba439 Mon Sep 17 00:00:00 2001
+From: Thiago Santos <thiago.sousa.santos@collabora.co.uk>
+Date: Thu, 2 Sep 2010 17:17:46 -0300
+Subject: [PATCH] camerabin: Set format to allow preallocation of buffers
+
+When going into playing we can already set the format (caps)
+that is going to be used on capture, allowing the videosrc to
+preallocate a large buffer for image capture and reducing
+shutter-to-shot delay.
+---
+ gst/camerabin/gstcamerabin.c |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
+
+diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
+index baeded0..518f6b0 100644
+--- a/gst/camerabin/gstcamerabin.c
++++ b/gst/camerabin/gstcamerabin.c
+@@ -4065,6 +4065,13 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
+       /* If using autovideosink, set view finder sink properties
+          now that actual sink has been created. */
+       camerabin_setup_view_elements (camera);
++
++      /* set the capture format for images if that is available */
++      if ((!camera->image_capture_caps || camera->image_capture_caps_update) &&
++          camera->image_capture_width && camera->image_capture_height) {
++        gst_camerabin_set_image_capture_caps (camera,
++            camera->image_capture_width, camera->image_capture_height);
++      }
+       break;
+     case GST_STATE_CHANGE_READY_TO_NULL:
+       gst_element_set_locked_state (camera->imgbin, FALSE);
+@@ -4107,6 +4114,9 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
+           gst_camerabin_scene_mode_notify_cb, camera);
+       g_signal_handlers_disconnect_by_func (camera->src_vid_src,
+           gst_camerabin_zoom_notify_cb, camera);
++
++      /* we might need to update our caps when going back to PLAYING */
++      camera->image_capture_caps_update = TRUE;
+       break;
+     case GST_STATE_CHANGE_READY_TO_NULL:
+       camerabin_destroy_elements (camera);

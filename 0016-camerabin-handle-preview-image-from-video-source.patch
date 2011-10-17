@@ -1,0 +1,258 @@
+From c2ec76ef06ee6624c383e0646715e6962094c60e Mon Sep 17 00:00:00 2001
+From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
+Date: Thu, 12 Aug 2010 14:22:39 +0300
+Subject: [PATCH] camerabin: handle preview image from video source
+
+Subdevsrc is able to provide preview image in a gst message,
+add support for the message handling and setting preview caps for it.
+---
+ gst/camerabin/gstcamerabin.c |  165 +++++++++++++++++++++++++++++++++++++++++-
+ gst/camerabin/gstcamerabin.h |    3 +
+ 2 files changed, 167 insertions(+), 1 deletions(-)
+
+diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
+index a8d0c9e..21fd31f 100644
+--- a/gst/camerabin/gstcamerabin.c
++++ b/gst/camerabin/gstcamerabin.c
+@@ -221,6 +221,9 @@ static guint camerabin_signals[LAST_SIGNAL];
+ /* message names */
+ #define PREVIEW_MESSAGE_NAME "preview-image"
+ #define IMG_CAPTURED_MESSAGE_NAME "image-captured"
++#define VIDEO_SOURCE_PREVIEW_MESSAGE_NAME "photo-capture-preview"
++
++#define CAMERABIN_VIDEO_SOURCE(cb) (cb->src_vid_src ? cb->src_vid_src : cb->app_vid_src)
+ 
+ #define CAMERABIN_PROCESSING_INC_UNLOCKED(c)  \
+   (c)->processing_counter += 1;               \
+@@ -382,6 +385,8 @@ static void
+ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
+     gint height);
+ 
++static void gst_camerabin_set_video_source_preview_caps (GstCameraBin * camera);
++
+ static void
+ gst_camerabin_set_video_resolution_fps (GstCameraBin * camera, gint width,
+     gint height, gint fps_n, gint fps_d);
+@@ -1822,6 +1827,7 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
+     }
+     CP ("CAMERABIN PREVIEW SENT");
+     ret = TRUE;
++    camera->preview_sent = TRUE;
+   }
+ 
+   return ret;
+@@ -1858,7 +1864,7 @@ gst_camerabin_have_img_buffer (GstPad * pad, GstMiniObject * obj,
+       goto done;
+     }
+ 
+-    if (camera->preview_caps) {
++    if (camera->preview_caps && !camera->preview_sent) {
+       gst_camerabin_send_preview (camera, buffer);
+     }
+ 
+@@ -3431,6 +3437,7 @@ gst_camerabin_init (GstCameraBin * camera, GstCameraBinClass * gclass)
+   camera->app_vid_src = NULL;
+ 
+   camera->active_bin = NULL;
++  camera->preview_sent = FALSE;
+ }
+ 
+ static void
+@@ -3636,6 +3643,14 @@ gst_camerabin_set_property (GObject * object, guint prop_id,
+               gst_camerabin_preview_create_pipeline (camera, new_caps,
+               *preview_source_filter);
+         }
++
++        if (camera->mode == MODE_IMAGE &&
++            CAMERABIN_VIDEO_SOURCE (camera) != NULL &&
++            gst_element_implements_interface (CAMERABIN_VIDEO_SOURCE (camera),
++                GST_TYPE_PHOTOGRAPHY)) {
++          /* Set preview caps for image capture also to video source */
++          gst_camerabin_set_video_source_preview_caps (camera);
++        }
+       }
+       break;
+     }
+@@ -4089,6 +4104,31 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
+ 
+       g_mutex_unlock (camera->capture_mutex);
+       break;
++    case GST_MESSAGE_ELEMENT:
++    {
++      const GstStructure *st;
++      const GValue *val;
++      GstBuffer *preview_image = NULL;
++
++      st = gst_message_get_structure (msg);
++      if (st) {
++        GST_LOG_OBJECT (camera, "element msg: %s", gst_structure_get_name (st));
++        if (camera->preview_pipeline &&
++            gst_structure_has_name (st, VIDEO_SOURCE_PREVIEW_MESSAGE_NAME)) {
++          val = gst_structure_get_value (st, "buffer");
++          if (val) {
++            preview_image = gst_value_get_buffer (val);
++            GST_DEBUG_OBJECT (camera,
++                "got preview image %p with size %d and caps %" GST_PTR_FORMAT,
++                preview_image, GST_BUFFER_SIZE (preview_image),
++                GST_BUFFER_CAPS (preview_image));
++            /* Re-format preview image if necessary and send to application */
++            gst_camerabin_send_preview (camera, preview_image);
++          }
++        }
++      }
++      break;
++    }
+     default:
+ #ifdef GST_TIMESTAMPS
+       st = gst_message_get_structure (msg);
+@@ -4157,6 +4197,8 @@ gst_camerabin_capture_start (GstCameraBin * camera)
+   camera->block_viewfinder_trigger = camera->block_viewfinder_prop;
+   GST_OBJECT_UNLOCK (camera);
+ 
++  camera->preview_sent = FALSE;
++
+   if (camera->active_bin) {
+     if (camera->active_bin == camera->imgbin) {
+       GST_INFO_OBJECT (camera, "starting image capture");
+@@ -4320,6 +4362,127 @@ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
+   }
+ }
+ 
++/* gst_camerabin_create_video_source_preview_caps
++ * @camera: camerabin object
++ * @supported_caps: preview image formats that video source supports
++ *
++ * Figure out image capture preview caps for video source.
++ * Ideally we should take account what kind of preview image video source is
++ * able to produce, what camerabin can convert to, and what application
++ * requested.
++ */
++static GstCaps *
++gst_camerabin_create_video_source_preview_caps (GstCameraBin * camera,
++    const GstCaps * supported_caps)
++{
++  GstCaps *video_source_preview_caps = NULL, *optimized_caps = NULL;
++  GstElement *preview_source = NULL;
++  GstPad *preview_source_pad = NULL;
++  const GstStructure *st = NULL;
++  gint w = 0, h = 0;
++
++  GST_LOG_OBJECT (camera,
++      "figuring out suitable preview caps for video source");
++
++  if (camera->preview_pipeline) {
++    preview_source =
++        gst_bin_get_by_name (GST_BIN (camera->preview_pipeline), "prev_src");
++    if (preview_source) {
++      preview_source_pad = gst_element_get_static_pad (preview_source, "src");
++      if (preview_source_pad) {
++        /* Fall back to some caps that video source can produce */
++        video_source_preview_caps = gst_caps_copy (supported_caps);
++        gst_pad_fixate_caps (preview_source_pad, video_source_preview_caps);
++        GST_DEBUG_OBJECT (camera,
++            "fixated caps: %" GST_PTR_FORMAT, video_source_preview_caps);
++
++        /* Attempt to optimize by using resolution that app requests */
++        optimized_caps = gst_caps_copy (video_source_preview_caps);
++        GST_DEBUG_OBJECT (camera,
++            "preview caps application requested: %" GST_PTR_FORMAT,
++            camera->preview_caps);
++        st = gst_caps_get_structure (camera->preview_caps, 0);
++        gst_structure_get_int (st, "width", &w);
++        gst_structure_get_int (st, "height", &h);
++        gst_caps_set_simple (optimized_caps, "width", G_TYPE_INT, w, "height",
++            G_TYPE_INT, h, NULL);
++        GST_DEBUG_OBJECT (camera,
++            "resolution optimized caps: %" GST_PTR_FORMAT, optimized_caps);
++        if (gst_caps_can_intersect (optimized_caps, supported_caps)) {
++          /* Optimization succeeded */
++          gst_caps_replace (&video_source_preview_caps, optimized_caps);
++        }
++        gst_caps_unref (optimized_caps);
++        GST_DEBUG_OBJECT (camera,
++            "new preview caps for video source: %" GST_PTR_FORMAT,
++            video_source_preview_caps);
++        gst_object_unref (preview_source_pad);
++      }
++      gst_object_unref (preview_source);
++    }
++  }
++
++  return video_source_preview_caps;
++}
++
++/*
++ * gst_camerabin_set_video_source_preview_caps:
++ * @camera: camerabin object
++ *
++ * Set preview image format to video source element that
++ * implements photography interface.
++ */
++static void
++gst_camerabin_set_video_source_preview_caps (GstCameraBin * camera)
++{
++  GstCaps *video_source_preview_caps = NULL;
++  GstCaps *image_preview_supported_caps = NULL;
++  GstElement *video_source = CAMERABIN_VIDEO_SOURCE (camera);
++
++  g_return_if_fail (gst_element_implements_interface (video_source,
++          GST_TYPE_PHOTOGRAPHY) != FALSE);
++
++  GST_LOG_OBJECT (camera, "setting preview caps for video source");
++
++  if (camera->preview_caps) {
++    /* Find the caps our video source supports for image preview */
++    g_object_get (G_OBJECT (video_source),
++        "image-preview-supported-caps", &image_preview_supported_caps, NULL);
++    GST_DEBUG_OBJECT (camera,
++        "video source image preview caps: %" GST_PTR_FORMAT,
++        image_preview_supported_caps);
++    if (!gst_caps_is_empty (image_preview_supported_caps)) {
++      /* Try if video source can produce requested preview format natively */
++      video_source_preview_caps =
++          gst_caps_intersect (image_preview_supported_caps,
++          camera->preview_caps);
++      if (gst_caps_is_empty (video_source_preview_caps)) {
++        /* Figure out preview caps we can use */
++        gst_caps_unref (video_source_preview_caps);
++        video_source_preview_caps =
++            gst_camerabin_create_video_source_preview_caps (camera,
++            image_preview_supported_caps);
++      }
++    }
++
++  }
++
++  GST_DEBUG_OBJECT (camera,
++      "setting preview caps for video source: %" GST_PTR_FORMAT,
++      video_source_preview_caps);
++
++  gst_photography_set_format (GST_PHOTOGRAPHY (video_source),
++      GST_PHOTOGRAPHY_OPERATION_MODE_PREVIEW, video_source_preview_caps);
++
++  if (image_preview_supported_caps) {
++    gst_caps_unref (image_preview_supported_caps);
++  }
++
++  if (video_source_preview_caps) {
++    gst_caps_unref (video_source_preview_caps);
++  }
++}
++
+ static void
+ gst_camerabin_set_image_resolution (GstCameraBin * camera, gint width,
+     gint height)
+diff --git a/gst/camerabin/gstcamerabin.h b/gst/camerabin/gstcamerabin.h
+index d53af1e..be44216 100644
+--- a/gst/camerabin/gstcamerabin.h
++++ b/gst/camerabin/gstcamerabin.h
+@@ -188,6 +188,9 @@ struct _GstCameraBin
+   gint base_crop_bottom;
+   gint base_crop_left;
+   gint base_crop_right;
++
++  /* Indicates if preview image has been sent to application */
++  gboolean preview_sent;
+ };
+ 
+ /**

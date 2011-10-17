@@ -1,0 +1,12 @@
+diff --git a/gst/camerabin/gstcamerabin-enum.h b/gst/camerabin/gstcamerabin-enum.h
+index d372a19..67adae8 100644
+--- a/gst/camerabin/gstcamerabin-enum.h
++++ b/gst/camerabin/gstcamerabin-enum.h
+@@ -61,6 +61,7 @@ enum
+   ARG_VIEWFINDER_FILTER,
+   ARG_FLICKER_MODE,
+   ARG_FOCUS_MODE,
++  ARG_NOISE_REDUCTION,
+   ARG_BLOCK_VIEWFINDER,
+   ARG_IMAGE_CAPTURE_WIDTH,
+   ARG_IMAGE_CAPTURE_HEIGHT,
