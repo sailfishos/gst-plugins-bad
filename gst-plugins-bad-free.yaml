@@ -4,7 +4,7 @@ Version: 0.10.21
 Release: 1
 Group: Applications/Multimedia
 License: LGPLv2+ and LGPLv2
-URL: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-%{version}.tar.bz2
+URL: http://gstreamer.freedesktop.org/
 Sources:
     - gst-plugins-bad-free-%{version}.tar.bz2
     - gst-p-bad-cleanup.sh
