@@ -176,7 +176,7 @@ mv %{buildroot}/%{_libdir}/pkgconfig/gstreamer-plugins-bad-0.10.pc %{buildroot}/
 %{_libdir}/gstreamer-0.10/libgstaudioparsersbad.so
 %{_libdir}/gstreamer-0.10/libgstshm.so
 %{_libdir}/gstreamer-0.10/libgstvideomaxrate.so
-%ifarch %{ix86}
+%ifarch %{ix86} x86_64
 %{_libdir}/gstreamer-0.10/libgstreal.so
 %endif
 #debugging plugin
