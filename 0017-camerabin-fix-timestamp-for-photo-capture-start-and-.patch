@@ -1,25 +1,26 @@
-From 791143117a90574c7eed8f5e2a31201b16593140 Mon Sep 17 00:00:00 2001
+From 1e924c103f9618dbd4be55fa15be6dca7f6032f9 Mon Sep 17 00:00:00 2001
 From: Teemu Katajisto <ext-teemu.katajisto@nokia.com>
 Date: Fri, 10 Sep 2010 14:38:25 +0300
-Subject: [PATCH] camerabin: fix timestamp for photo-capture-start and photo-capture-stop
+Subject: [PATCH 17/23] camerabin: fix timestamp for photo-capture-start and
+ photo-capture-stop
 
 ---
  gst/camerabin/gstcamerabin.c |   17 +++++++----------
- 1 files changed, 7 insertions(+), 10 deletions(-)
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index 1599e57..baeded0 100644
+index 8bb5749..91e1db1 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -4199,7 +4199,6 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
- {
+@@ -4328,7 +4328,6 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
    GstCameraBin *camera = GST_CAMERABIN (bin);
+ 
  #ifdef GST_TIMESTAMPS
 -  const GstStructure *st;
    gint status;
  #endif
  
-@@ -4266,15 +4265,8 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
+@@ -4397,15 +4396,8 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
              /* Re-format preview image if necessary and send to application */
              gst_camerabin_send_preview (camera, preview_image);
            }
@@ -36,7 +37,7 @@ index 1599e57..baeded0 100644
            CP ("CAMERABIN SOURCE CAPTURE START");
          } else if (gst_structure_has_name (st, "photo-capture-end")) {
            CP ("CAMERABIN SOURCE CAPTURE END");
-@@ -4285,8 +4277,13 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
+@@ -4416,8 +4408,13 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
              }
            }
          }
@@ -51,3 +52,6 @@ index 1599e57..baeded0 100644
        break;
    }
    GST_BIN_CLASS (parent_class)->handle_message (bin, msg);
+-- 
+1.7.10.4
+

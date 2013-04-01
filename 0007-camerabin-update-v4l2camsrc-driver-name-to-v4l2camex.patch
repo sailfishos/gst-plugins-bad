@@ -1,17 +1,17 @@
-From 9c586f5906571c22e8b6508f70026ed376e9a5a4 Mon Sep 17 00:00:00 2001
+From f4cb8364d0be9a044151e7844fdb22d90461e35c Mon Sep 17 00:00:00 2001
 From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
 Date: Fri, 29 Jan 2010 14:08:24 +0200
-Subject: [PATCH] camerabin: update v4l2camsrc driver name to v4l2camext
+Subject: [PATCH 07/23] camerabin: update v4l2camsrc driver name to v4l2camext
 
 ---
  gst/camerabin/gstcamerabin.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index 4f7d9ca..c5f5d29 100644
+index 9baf04e..d89c702 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -210,7 +210,7 @@ static guint camerabin_signals[LAST_SIGNAL];
+@@ -219,7 +219,7 @@ static guint camerabin_signals[LAST_SIGNAL];
  #define ZOOM_1X MIN_ZOOM
  
  /* FIXME: this is v4l2camsrc specific */
@@ -20,3 +20,6 @@ index 4f7d9ca..c5f5d29 100644
  
  #define DEFAULT_BLOCK_VIEWFINDER FALSE
  #define DEFAULT_READY_FOR_CAPTURE TRUE
+-- 
+1.7.10.4
+

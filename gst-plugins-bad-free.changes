@@ -1,5 +1,8 @@
-* Mon Jan 28 2013 Oleg Girko <ol+mer@infoserver.ru> - 0.10.21
-- Fix unpackaged real plugin for x86_64.
+* Sun Feb 17 2013 Mohammed Hassan <msameer@foolab.org> - 0.10.23
+- Updated to 0.10.23
+- Refreshed and modified patches as needed
+- don't disable debug
+- Cleaned up yaml file
 
 * Sat Aug 04 2012 Seppo Yliklaavu <seppo.yliklaavu@gmail.com> - 0.10.21
 - Fixes MER#282 : gst-plugins-bad-free yaml (and spec) file has incorrect URL tag

@@ -1,17 +1,17 @@
-From eef8ed83d6305bc157f1d3bdb7aa92a3d3688650 Mon Sep 17 00:00:00 2001
+From c8944a2bf81019ed2026d1e0ca741424f81c8be2 Mon Sep 17 00:00:00 2001
 From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
 Date: Wed, 11 Mar 2009 18:31:17 +0200
-Subject: [PATCH] camerabin: change default yuv format from I420 to UYVY
+Subject: [PATCH 02/23] camerabin: change default yuv format from I420 to UYVY
 
 ---
  gst/camerabin/gstcamerabin.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index 7375402..e08f7bf 100644
+index a17e02c..7405dc3 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -199,7 +199,7 @@ static guint camerabin_signals[LAST_SIGNAL];
+@@ -204,7 +204,7 @@ static guint camerabin_signals[LAST_SIGNAL];
  #define DEFAULT_FPS_N 0         /* makes it use the default */
  #define DEFAULT_FPS_D 1
  
@@ -20,3 +20,6 @@ index 7375402..e08f7bf 100644
  #define CAMERABIN_MAX_VF_WIDTH 848
  #define CAMERABIN_MAX_VF_HEIGHT 848
  
+-- 
+1.7.10.4
+

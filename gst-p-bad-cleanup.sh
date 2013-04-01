@@ -6,7 +6,7 @@
 # need to add dependency package name to the .spec file.
 #
 
-SOURCE="gst-plugins-bad-0.10.21.tar.bz2"
+SOURCE="gst-plugins-bad-0.10.23.tar.bz2"
 NEW_SOURCE=`echo $SOURCE | sed 's/bad-/bad-free-/'`
 DIRECTORY=`echo $SOURCE | sed 's/\.tar\.bz2//'`
 NEW_DIRECTORY=`echo $DIRECTORY | sed 's/bad-/bad-free-/'`

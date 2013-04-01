@@ -1,7 +1,7 @@
-From fc665fc3a197ee330d7ce49c3b7bc1f30159179f Mon Sep 17 00:00:00 2001
+From 416f812e57522cf77c184662cbe171b3bda03920 Mon Sep 17 00:00:00 2001
 From: Hoseok Chang <hoseok.chang@nokia.com>
 Date: Wed, 25 Aug 2010 13:41:30 +0300
-Subject: [PATCH] camerabin: rounding support for framerate setting
+Subject: [PATCH 16/23] camerabin: rounding support for framerate setting
 
 * Add "framerate-rounding" property
 * round the framerate to the allowed one by video source
@@ -12,10 +12,10 @@ Subject: [PATCH] camerabin: rounding support for framerate setting
  3 files changed, 147 insertions(+), 4 deletions(-)
 
 diff --git a/gst/camerabin/gstcamerabin-enum.h b/gst/camerabin/gstcamerabin-enum.h
-index 21b6ab8..d372a19 100644
+index 7fbe6c8..f818319 100644
 --- a/gst/camerabin/gstcamerabin-enum.h
 +++ b/gst/camerabin/gstcamerabin-enum.h
-@@ -70,7 +70,8 @@ enum
+@@ -71,7 +71,8 @@ enum
    ARG_PREVIEW_SOURCE_FILTER,
    ARG_READY_FOR_CAPTURE,
    ARG_IDLE,
@@ -26,10 +26,10 @@ index 21b6ab8..d372a19 100644
  
  /**
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index 21fd31f..1599e57 100644
+index 65a4e18..8bb5749 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -216,6 +216,7 @@ static guint camerabin_signals[LAST_SIGNAL];
+@@ -225,6 +225,7 @@ static guint camerabin_signals[LAST_SIGNAL];
  #define DEFAULT_V4L2CAMSRC_DRIVER_NAME "v4l2camext"
  
  #define DEFAULT_BLOCK_VIEWFINDER FALSE
@@ -37,7 +37,7 @@ index 21fd31f..1599e57 100644
  #define DEFAULT_READY_FOR_CAPTURE TRUE
  
  /* message names */
-@@ -324,6 +325,9 @@ static guint32 get_srcpad_current_format (GstElement * element);
+@@ -345,6 +346,9 @@ static guint32 get_srcpad_current_format (GstElement * element);
  static const GValue *gst_camerabin_find_better_framerate (GstCameraBin * camera,
      GstStructure * st, const GValue * orig_framerate);
  
@@ -47,7 +47,7 @@ index 21fd31f..1599e57 100644
  static void
  gst_camerabin_update_aspect_filter (GstCameraBin * camera, GstCaps * new_caps);
  
-@@ -535,6 +539,8 @@ camerabin_setup_src_elements (GstCameraBin * camera)
+@@ -556,6 +560,8 @@ camerabin_setup_src_elements (GstCameraBin * camera)
        camera->pre_night_fps_n = camera->app_fps_n;
        camera->pre_night_fps_d = camera->app_fps_d;
        detect_framerate = TRUE;
@@ -56,7 +56,7 @@ index 21fd31f..1599e57 100644
      } else {
        gst_structure_set (st,
            "framerate", GST_TYPE_FRACTION, camera->app_fps_n,
-@@ -2269,8 +2275,19 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
+@@ -2334,8 +2340,19 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
    caps_size = gst_caps_get_size (intersect);
    for (i = 0; i < caps_size; i++) {
      structure = gst_caps_get_structure (intersect, i);
@@ -78,7 +78,7 @@ index 21fd31f..1599e57 100644
    }
  
    /* Set found frame rate to original caps */
-@@ -2293,7 +2310,6 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
+@@ -2358,7 +2375,6 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
    }
  }
  
@@ -86,7 +86,7 @@ index 21fd31f..1599e57 100644
  /**
   * get_srcpad_current_format:
   * @element: element to get the format from
-@@ -2405,6 +2421,111 @@ gst_camerabin_find_better_framerate (GstCameraBin * camera, GstStructure * st,
+@@ -2470,6 +2486,111 @@ gst_camerabin_find_better_framerate (GstCameraBin * camera, GstStructure * st,
    return framerate;
  }
  
@@ -198,7 +198,7 @@ index 21fd31f..1599e57 100644
  /*
   * gst_camerabin_update_aspect_filter:
   * @camera: camerabin object
-@@ -3188,6 +3309,20 @@ gst_camerabin_class_init (GstCameraBinClass * klass)
+@@ -3266,6 +3387,20 @@ gst_camerabin_class_init (GstCameraBinClass * klass)
            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
  
    /**
@@ -219,7 +219,7 @@ index 21fd31f..1599e57 100644
     * GstCameraBin:ready-for-capture:
     *
     * When TRUE new capture can be prepared. If FALSE capturing is ongoing
-@@ -3762,6 +3897,9 @@ gst_camerabin_set_property (GObject * object, guint prop_id,
+@@ -3850,6 +3985,9 @@ gst_camerabin_set_property (GObject * object, guint prop_id,
        }
      }
        break;
@@ -229,7 +229,7 @@ index 21fd31f..1599e57 100644
      default:
        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
        break;
-@@ -3886,6 +4024,9 @@ gst_camerabin_get_property (GObject * object, guint prop_id,
+@@ -3979,6 +4117,9 @@ gst_camerabin_get_property (GObject * object, guint prop_id,
      case ARG_IDLE:
        g_value_set_boolean (value, camera->processing_counter == 0);
        break;
@@ -240,10 +240,10 @@ index 21fd31f..1599e57 100644
        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
        break;
 diff --git a/gst/camerabin/gstcamerabin.h b/gst/camerabin/gstcamerabin.h
-index be44216..e50becc 100644
+index 82b82a9..8216619 100644
 --- a/gst/camerabin/gstcamerabin.h
 +++ b/gst/camerabin/gstcamerabin.h
-@@ -90,6 +90,7 @@ struct _GstCameraBin
+@@ -91,6 +91,7 @@ struct _GstCameraBin
    /* Frames per second configured to camerabin */
    gint fps_n;
    gint fps_d;
@@ -251,3 +251,6 @@ index be44216..e50becc 100644
  
    /* app configured resolution/framerate */
    gint app_width;
+-- 
+1.7.10.4
+

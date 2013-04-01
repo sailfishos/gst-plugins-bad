@@ -1,7 +1,8 @@
-From 2b333487680c85b9ff05d61abcc4b73ea8553d58 Mon Sep 17 00:00:00 2001
+From 896179f1b99c08a71b0fbac0611bb4b1074e91a2 Mon Sep 17 00:00:00 2001
 From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
 Date: Mon, 9 Aug 2010 15:54:49 +0300
-Subject: [PATCH] camerabin: Take account sensor mode aspect ratio when selecting best framerate (meego specific)
+Subject: [PATCH 14/23] camerabin: Take account sensor mode aspect ratio when
+ selecting best framerate (meego specific)
 
 If application does not explicitly set framerate, camerabin chooses
 best framerate it can find for the resolution, usually the highest framerate.
@@ -9,13 +10,13 @@ This patch eliminates choosing framerates which correspond to sensor mode that
 has different aspect ratio than the resolution application requested.
 ---
  gst/camerabin/gstcamerabin.c |   91 +++++++++++++++++++++++++++++++++++++++++-
- 1 files changed, 89 insertions(+), 2 deletions(-)
+ 1 file changed, 89 insertions(+), 2 deletions(-)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index dba61fc..a8d0c9e 100644
+index 492373e..2adfd5d 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -393,6 +393,9 @@ static void
+@@ -414,6 +414,9 @@ static void
  gst_camerabin_set_image_resolution (GstCameraBin * camera, gint width,
      gint height);
  
@@ -25,7 +26,7 @@ index dba61fc..a8d0c9e 100644
  
  /*
   * GST BOILERPLATE and GObject types
-@@ -2215,6 +2218,8 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
+@@ -2280,6 +2283,8 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
    const GValue *framerate = NULL;
    guint caps_size, i;
    guint32 format = 0;
@@ -34,7 +35,7 @@ index dba61fc..a8d0c9e 100644
  
    GST_INFO_OBJECT (camera, "filter caps:%" GST_PTR_FORMAT, filter_caps);
  
-@@ -2232,10 +2237,25 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
+@@ -2297,10 +2302,25 @@ gst_camerabin_set_allowed_framerate (GstCameraBin * camera,
      gst_structure_remove_field (structure, "format");
    }
  
@@ -62,7 +63,7 @@ index dba61fc..a8d0c9e 100644
    intersect = gst_caps_intersect (allowed_caps, tmp_caps);
    GST_INFO_OBJECT (camera, "intersect caps:%" GST_PTR_FORMAT, intersect);
  
-@@ -4314,6 +4334,73 @@ gst_camerabin_set_image_resolution (GstCameraBin * camera, gint width,
+@@ -4449,6 +4469,73 @@ gst_camerabin_set_image_resolution (GstCameraBin * camera, gint width,
    }
  }
  
@@ -136,3 +137,6 @@ index dba61fc..a8d0c9e 100644
  /* entry point to initialize the plug-in
   * initialize the plug-in itself
   * register the element factories and pad templates
+-- 
+1.7.10.4
+

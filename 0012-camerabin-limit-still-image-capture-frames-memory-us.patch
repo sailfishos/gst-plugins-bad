@@ -1,17 +1,18 @@
-From 3fc7f2588e1c629502869c59749635e126f82d45 Mon Sep 17 00:00:00 2001
+From c9157ba3a1c6e27d78dbab3c499822799414b9cb Mon Sep 17 00:00:00 2001
 From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
 Date: Thu, 6 May 2010 15:17:20 +0300
-Subject: [PATCH] camerabin: limit still image capture frames memory usage to 100MB
+Subject: [PATCH 12/23] camerabin: limit still image capture frames memory
+ usage to 100MB
 
 ---
  gst/camerabin/gstcamerabin.c |    9 +++++----
- 1 files changed, 5 insertions(+), 4 deletions(-)
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index 6e79ca2..87bd3f4 100644
+index a7fcfb3..ecb526e 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -202,6 +202,9 @@ static guint camerabin_signals[LAST_SIGNAL];
+@@ -211,6 +211,9 @@ static guint camerabin_signals[LAST_SIGNAL];
  
  #define DEFAULT_FLAGS GST_CAMERABIN_FLAG_IMAGE_COLOR_CONVERSION
  
@@ -21,7 +22,7 @@ index 6e79ca2..87bd3f4 100644
  /* Using "bilinear" as default zoom method */
  #define CAMERABIN_DEFAULT_ZOOM_METHOD 1
  
-@@ -780,11 +783,9 @@ camerabin_create_elements (GstCameraBin * camera)
+@@ -813,11 +816,9 @@ camerabin_create_elements (GstCameraBin * camera)
      goto done;
    }
  
@@ -35,3 +36,6 @@ index 6e79ca2..87bd3f4 100644
    g_object_set (camera->img_queue, "silent", TRUE, NULL);
  
    camera->pad_src_queue = gst_element_get_static_pad (camera->img_queue, "src");
+-- 
+1.7.10.4
+

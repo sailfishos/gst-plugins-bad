@@ -1,15 +1,16 @@
-From 9fa709c4b23e227bba408eed00ebb0d3a8fa57a3 Mon Sep 17 00:00:00 2001
+From c2c1e203b81701594c84da4424bf385de7627a56 Mon Sep 17 00:00:00 2001
 From: Lauri Lehtinen <ext-lauri.1.lehtinen@nokia.com>
 Date: Fri, 5 Mar 2010 10:21:10 +0200
-Subject: [PATCH] GstPhotography: Added operation mode to photography API
+Subject: [PATCH 09/23] GstPhotography: Added operation mode to photography
+ API
 
 ---
  gst-libs/gst/interfaces/photography.c |   56 +++++++++++++++++++++++++++++++++
  gst-libs/gst/interfaces/photography.h |   17 +++++++++-
- 2 files changed, 72 insertions(+), 1 deletions(-)
+ 2 files changed, 72 insertions(+), 1 deletion(-)
 
 diff --git a/gst-libs/gst/interfaces/photography.c b/gst-libs/gst/interfaces/photography.c
-index 6fcf0d9..503d3f2 100644
+index 878b185..d8a9b50 100644
 --- a/gst-libs/gst/interfaces/photography.c
 +++ b/gst-libs/gst/interfaces/photography.c
 @@ -104,6 +104,8 @@ gst_photography_iface_base_init (GstPhotographyInterface * iface)
@@ -83,10 +84,10 @@ index 6fcf0d9..503d3f2 100644
  static void
  gst_photography_iface_class_init (gpointer g_class)
 diff --git a/gst-libs/gst/interfaces/photography.h b/gst-libs/gst/interfaces/photography.h
-index 0198788..bb1f8a0 100644
+index 4852ea3..82a9843 100644
 --- a/gst-libs/gst/interfaces/photography.h
 +++ b/gst-libs/gst/interfaces/photography.h
-@@ -203,6 +203,12 @@ typedef enum {
+@@ -206,6 +206,12 @@ typedef enum {
      GST_PHOTOGRAPHY_FOCUS_MODE_CONTINUOUS_EXTENDED,
  } GstFocusMode;
  
@@ -99,7 +100,7 @@ index 0198788..bb1f8a0 100644
  typedef struct
  {
    GstWhiteBalanceMode wb_mode;
-@@ -260,6 +266,8 @@ typedef void (*GstPhotoCapturePrepared) (gpointer data,
+@@ -263,6 +269,8 @@ typedef void (*GstPhotoCapturePrepared) (gpointer data,
   * @set_config: vmethod to set all configuration parameters at once
   * @get_config: vmethod to get all configuration parameters at once
   * @get_image_capture_supported_caps: vmethod to get caps describing supported image capture formats
@@ -108,7 +109,7 @@ index 0198788..bb1f8a0 100644
   *
   * #GstPhotographyInterface interface.
   */
-@@ -310,11 +318,13 @@ typedef struct _GstPhotographyInterface
+@@ -313,11 +321,13 @@ typedef struct _GstPhotographyInterface
    void (*set_autofocus) (GstPhotography * photo, gboolean on);
    gboolean (*set_config) (GstPhotography * photo, GstPhotoSettings * config);
    gboolean (*get_config) (GstPhotography * photo, GstPhotoSettings * config);
@@ -123,7 +124,7 @@ index 0198788..bb1f8a0 100644
  
    /*< private > */
    gpointer _gst_reserved[GST_PADDING];
-@@ -381,6 +391,11 @@ gboolean gst_photography_set_config (GstPhotography * photo,
+@@ -384,6 +394,11 @@ gboolean gst_photography_set_config (GstPhotography * photo,
  gboolean gst_photography_get_config (GstPhotography * photo,
      GstPhotoSettings * config);
  
@@ -135,3 +136,6 @@ index 0198788..bb1f8a0 100644
  G_END_DECLS
  
  #endif /* __GST_PHOTOGRAPHY_H__ */
+-- 
+1.7.10.4
+

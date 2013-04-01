@@ -1,21 +1,22 @@
-From cd64102ef577dd1eac3155b1ec5378f4325ba439 Mon Sep 17 00:00:00 2001
+From ded7f0a63cb060f015c2453102ba0203e5c68466 Mon Sep 17 00:00:00 2001
 From: Thiago Santos <thiago.sousa.santos@collabora.co.uk>
 Date: Thu, 2 Sep 2010 17:17:46 -0300
-Subject: [PATCH] camerabin: Set format to allow preallocation of buffers
+Subject: [PATCH 18/23] camerabin: Set format to allow preallocation of
+ buffers
 
 When going into playing we can already set the format (caps)
 that is going to be used on capture, allowing the videosrc to
 preallocate a large buffer for image capture and reducing
 shutter-to-shot delay.
 ---
- gst/camerabin/gstcamerabin.c |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+ gst/camerabin/gstcamerabin.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index baeded0..518f6b0 100644
+index 91e1db1..364d966 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -4065,6 +4065,13 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
+@@ -4158,6 +4158,13 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
        /* If using autovideosink, set view finder sink properties
           now that actual sink has been created. */
        camerabin_setup_view_elements (camera);
@@ -27,15 +28,17 @@ index baeded0..518f6b0 100644
 +            camera->image_capture_width, camera->image_capture_height);
 +      }
        break;
-     case GST_STATE_CHANGE_READY_TO_NULL:
-       gst_element_set_locked_state (camera->imgbin, FALSE);
-@@ -4107,6 +4114,9 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
+     case GST_STATE_CHANGE_PAUSED_TO_READY:
+       /* all processing should stop and those elements could have their state
+@@ -4212,6 +4219,8 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
            gst_camerabin_scene_mode_notify_cb, camera);
        g_signal_handlers_disconnect_by_func (camera->src_vid_src,
            gst_camerabin_zoom_notify_cb, camera);
-+
 +      /* we might need to update our caps when going back to PLAYING */
 +      camera->image_capture_caps_update = TRUE;
        break;
      case GST_STATE_CHANGE_READY_TO_NULL:
        camerabin_destroy_elements (camera);
+-- 
+1.7.10.4
+

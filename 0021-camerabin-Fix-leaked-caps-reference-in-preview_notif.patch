@@ -1,17 +1,18 @@
-From 7920f3d179e6c1973800a7bab0c32524ec3a21e4 Mon Sep 17 00:00:00 2001
+From 50e0a18d292dbf90a75a8e90f9601f01af11217e Mon Sep 17 00:00:00 2001
 From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
 Date: Wed, 27 Oct 2010 17:28:46 +0300
-Subject: [PATCH] camerabin: Fix leaked caps reference in preview_notify_cb()
+Subject: [PATCH 21/23] camerabin: Fix leaked caps reference in
+ preview_notify_cb()
 
 ---
  gst/camerabin/gstcamerabin.c |   13 ++++++++++---
- 1 files changed, 10 insertions(+), 3 deletions(-)
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index fc9b44e..5e87b54 100644
+index 9ead721..f6dad99 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -2844,9 +2844,16 @@ gst_camerabin_preview_notify_cb (GObject * video_source, GParamSpec * pspec,
+@@ -2909,9 +2909,16 @@ gst_camerabin_preview_notify_cb (GObject * video_source, GParamSpec * pspec,
      gpointer user_data)
  {
    GstCameraBin *camera = GST_CAMERABIN (user_data);
@@ -31,3 +32,6 @@ index fc9b44e..5e87b54 100644
      /* Preview caps have been set to camerabin, but they are not in effect
         in video source. This may happen if preview caps were previously set
         while video source was in NULL state or video source has reset them. */
+-- 
+1.7.10.4
+

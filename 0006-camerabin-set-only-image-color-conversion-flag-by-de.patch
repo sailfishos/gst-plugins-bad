@@ -1,27 +1,32 @@
-From 1072a53fcad469fed84e99c7c4157dff8a0fd901 Mon Sep 17 00:00:00 2001
+From b7bda4f3b5018d7ba3ce5904b16c3f140dbb426d Mon Sep 17 00:00:00 2001
 From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
 Date: Fri, 11 Dec 2009 14:49:40 +0200
-Subject: [PATCH] camerabin: set only image-color-conversion flag by default (maemo-specific)
+Subject: [PATCH 06/23] camerabin: set only image-color-conversion flag by
+ default (maemo-specific)
 
 Remove unnecessary default flags that aren't used in maemo.
 ---
- gst/camerabin/gstcamerabin.c |    6 +-----
- 1 files changed, 1 insertions(+), 5 deletions(-)
+ gst/camerabin/gstcamerabin.c |    7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index 624c720..2afd7b5 100644
+index 2a5c8d0..9baf04e 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -203,11 +203,7 @@ static guint camerabin_signals[LAST_SIGNAL];
+@@ -209,12 +209,7 @@ static guint camerabin_signals[LAST_SIGNAL];
  #define CAMERABIN_MAX_VF_WIDTH 848
  #define CAMERABIN_MAX_VF_HEIGHT 848
  
 -#define DEFAULT_FLAGS GST_CAMERABIN_FLAG_SOURCE_RESIZE | \
 -  GST_CAMERABIN_FLAG_VIEWFINDER_SCALE | \
--  GST_CAMERABIN_FLAG_AUDIO_CONVERSION | \
+-  GST_CAMERABIN_FLAG_VIEWFINDER_COLOR_CONVERSION | \
 -  GST_CAMERABIN_FLAG_IMAGE_COLOR_CONVERSION | \
--  GST_CAMERABIN_FLAG_VIDEO_COLOR_CONVERSION
+-  GST_CAMERABIN_FLAG_VIDEO_COLOR_CONVERSION | \
+-  GST_CAMERABIN_FLAG_AUDIO_CONVERSION
 +#define DEFAULT_FLAGS GST_CAMERABIN_FLAG_IMAGE_COLOR_CONVERSION
  
  /* Using "bilinear" as default zoom method */
  #define CAMERABIN_DEFAULT_ZOOM_METHOD 1
+-- 
+1.7.10.4
+

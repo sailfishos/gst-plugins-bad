@@ -1,7 +1,7 @@
-From 2fac6c11428ff80dd9116c50d0b571751b8f220e Mon Sep 17 00:00:00 2001
+From 29c81f3d9fc1d1265d4e3fcf823e51d333eb4bef Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Ren=C3=A9=20Stadler?= <rene.stadler@nokia.com>
 Date: Mon, 23 Feb 2009 18:14:12 +0200
-Subject: [PATCH] Lower gettext requirement from 0.17 to 0.13.
+Subject: [PATCH 01/23] Lower gettext requirement from 0.17 to 0.13.
 
 ---
  autogen.sh   |    2 +-
@@ -9,7 +9,7 @@ Subject: [PATCH] Lower gettext requirement from 0.17 to 0.13.
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/autogen.sh b/autogen.sh
-index 4ac0577..d3850d5 100755
+index 8a56c7a..91b42d7 100755
 --- a/autogen.sh
 +++ b/autogen.sh
 @@ -40,7 +40,7 @@ version_check "autoconf" "$AUTOCONF autoconf autoconf270 autoconf269 autoconf268
@@ -22,10 +22,10 @@ index 4ac0577..d3850d5 100755
                "ftp://ftp.gnu.org/pub/gnu/libtool/" 1 5 0 || DIE=1
  version_check "pkg-config" "" \
 diff --git a/configure.ac b/configure.ac
-index 396b427..8fc939a 100644
+index 93a694f..b28e413 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -63,7 +63,7 @@ AC_SUBST(ACLOCAL_AMFLAGS, "-I m4 -I common/m4")
+@@ -73,7 +73,7 @@ AC_SUBST(ACLOCAL_AMFLAGS, "-I m4 -I common/m4")
  
  dnl set up gettext
  dnl the version check needs to stay here because autopoint greps for it
@@ -34,3 +34,6 @@ index 396b427..8fc939a 100644
  AM_GNU_GETTEXT([external])
  AG_GST_GETTEXT([gst-plugins-bad-$GST_MAJORMINOR])
  
+-- 
+1.7.10.4
+

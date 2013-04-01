@@ -1,20 +1,20 @@
-From c2ec76ef06ee6624c383e0646715e6962094c60e Mon Sep 17 00:00:00 2001
+From 973af7f7f93ee05a40890e68be29e4de333ce124 Mon Sep 17 00:00:00 2001
 From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
 Date: Thu, 12 Aug 2010 14:22:39 +0300
-Subject: [PATCH] camerabin: handle preview image from video source
+Subject: [PATCH 15/23] camerabin: handle preview image from video source
 
 Subdevsrc is able to provide preview image in a gst message,
 add support for the message handling and setting preview caps for it.
 ---
- gst/camerabin/gstcamerabin.c |  165 +++++++++++++++++++++++++++++++++++++++++-
+ gst/camerabin/gstcamerabin.c |  164 +++++++++++++++++++++++++++++++++++++++++-
  gst/camerabin/gstcamerabin.h |    3 +
- 2 files changed, 167 insertions(+), 1 deletions(-)
+ 2 files changed, 166 insertions(+), 1 deletion(-)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index a8d0c9e..21fd31f 100644
+index 2adfd5d..65a4e18 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -221,6 +221,9 @@ static guint camerabin_signals[LAST_SIGNAL];
+@@ -230,6 +230,9 @@ static guint camerabin_signals[LAST_SIGNAL];
  /* message names */
  #define PREVIEW_MESSAGE_NAME "preview-image"
  #define IMG_CAPTURED_MESSAGE_NAME "image-captured"
@@ -24,7 +24,7 @@ index a8d0c9e..21fd31f 100644
  
  #define CAMERABIN_PROCESSING_INC_UNLOCKED(c)  \
    (c)->processing_counter += 1;               \
-@@ -382,6 +385,8 @@ static void
+@@ -403,6 +406,8 @@ static void
  gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
      gint height);
  
@@ -33,24 +33,24 @@ index a8d0c9e..21fd31f 100644
  static void
  gst_camerabin_set_video_resolution_fps (GstCameraBin * camera, gint width,
      gint height, gint fps_n, gint fps_d);
-@@ -1822,6 +1827,7 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
-     }
+@@ -1875,6 +1880,7 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
+ 
      CP ("CAMERABIN PREVIEW SENT");
      ret = TRUE;
 +    camera->preview_sent = TRUE;
    }
  
    return ret;
-@@ -1858,7 +1864,7 @@ gst_camerabin_have_img_buffer (GstPad * pad, GstMiniObject * obj,
-       goto done;
-     }
+@@ -1902,7 +1908,7 @@ gst_camerabin_have_img_buffer (GstPad * pad, GstMiniObject * obj,
+ 
+     GST_LOG ("got buffer %p with size %d", buffer, GST_BUFFER_SIZE (buffer));
  
 -    if (camera->preview_caps) {
 +    if (camera->preview_caps && !camera->preview_sent) {
        gst_camerabin_send_preview (camera, buffer);
      }
  
-@@ -3431,6 +3437,7 @@ gst_camerabin_init (GstCameraBin * camera, GstCameraBinClass * gclass)
+@@ -3512,6 +3518,7 @@ gst_camerabin_init (GstCameraBin * camera, GstCameraBinClass * gclass)
    camera->app_vid_src = NULL;
  
    camera->active_bin = NULL;
@@ -58,11 +58,10 @@ index a8d0c9e..21fd31f 100644
  }
  
  static void
-@@ -3636,6 +3643,14 @@ gst_camerabin_set_property (GObject * object, guint prop_id,
-               gst_camerabin_preview_create_pipeline (camera, new_caps,
-               *preview_source_filter);
+@@ -3758,6 +3765,13 @@ gst_camerabin_set_property (GObject * object, guint prop_id,
+               gst_camerabin_preview_create_pipeline (GST_ELEMENT (camera),
+               preview_caps, *preview_source_filter);
          }
-+
 +        if (camera->mode == MODE_IMAGE &&
 +            CAMERABIN_VIDEO_SOURCE (camera) != NULL &&
 +            gst_element_implements_interface (CAMERABIN_VIDEO_SOURCE (camera),
@@ -72,8 +71,8 @@ index a8d0c9e..21fd31f 100644
 +        }
        }
        break;
-     }
-@@ -4089,6 +4104,31 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
+     case ARG_VIEWFINDER_FILTER:
+@@ -4221,6 +4235,31 @@ gst_camerabin_handle_message_func (GstBin * bin, GstMessage * msg)
  
        g_mutex_unlock (camera->capture_mutex);
        break;
@@ -105,7 +104,7 @@ index a8d0c9e..21fd31f 100644
      default:
  #ifdef GST_TIMESTAMPS
        st = gst_message_get_structure (msg);
-@@ -4157,6 +4197,8 @@ gst_camerabin_capture_start (GstCameraBin * camera)
+@@ -4292,6 +4331,8 @@ gst_camerabin_capture_start (GstCameraBin * camera)
    camera->block_viewfinder_trigger = camera->block_viewfinder_prop;
    GST_OBJECT_UNLOCK (camera);
  
@@ -114,7 +113,7 @@ index a8d0c9e..21fd31f 100644
    if (camera->active_bin) {
      if (camera->active_bin == camera->imgbin) {
        GST_INFO_OBJECT (camera, "starting image capture");
-@@ -4320,6 +4362,127 @@ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
+@@ -4455,6 +4496,127 @@ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
    }
  }
  
@@ -243,10 +242,10 @@ index a8d0c9e..21fd31f 100644
  gst_camerabin_set_image_resolution (GstCameraBin * camera, gint width,
      gint height)
 diff --git a/gst/camerabin/gstcamerabin.h b/gst/camerabin/gstcamerabin.h
-index d53af1e..be44216 100644
+index 1c0a075..82b82a9 100644
 --- a/gst/camerabin/gstcamerabin.h
 +++ b/gst/camerabin/gstcamerabin.h
-@@ -188,6 +188,9 @@ struct _GstCameraBin
+@@ -192,6 +192,9 @@ struct _GstCameraBin
    gint base_crop_bottom;
    gint base_crop_left;
    gint base_crop_right;
@@ -256,3 +255,6 @@ index d53af1e..be44216 100644
  };
  
  /**
+-- 
+1.7.10.4
+

@@ -1,0 +1,27 @@
+From ed185c9d422e2d49b3246a8a94cffa22577f31fe Mon Sep 17 00:00:00 2001
+From: Mohammed Sameer <msameer@foolab.org>
+Date: Sun, 17 Feb 2013 22:06:35 +0200
+Subject: [PATCH 23/23] extend photography iface This is patch
+ 0100-extend-photography-iface.patch I had to convert
+ it to a git am compatible patch but I am not the
+ author. I don't know the author
+
+---
+ gst/camerabin/gstcamerabin-enum.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/gst/camerabin/gstcamerabin-enum.h b/gst/camerabin/gstcamerabin-enum.h
+index f818319..c74be9c 100644
+--- a/gst/camerabin/gstcamerabin-enum.h
++++ b/gst/camerabin/gstcamerabin-enum.h
+@@ -62,6 +62,7 @@ enum
+   ARG_VIEWFINDER_FILTER,
+   ARG_FLICKER_MODE,
+   ARG_FOCUS_MODE,
++  ARG_NOISE_REDUCTION,
+   ARG_BLOCK_VIEWFINDER,
+   ARG_IMAGE_CAPTURE_WIDTH,
+   ARG_IMAGE_CAPTURE_HEIGHT,
+-- 
+1.7.10.4
+

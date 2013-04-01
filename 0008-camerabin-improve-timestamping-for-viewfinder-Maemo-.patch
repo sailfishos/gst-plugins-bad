@@ -1,19 +1,20 @@
-From 7997c5264b45872da5ceabafa18d191cb699a270 Mon Sep 17 00:00:00 2001
+From b3871de09c6716d9ccf94d80d7c062307c44d0c6 Mon Sep 17 00:00:00 2001
 From: Teemu Katajisto <ext-teemu.katajisto@nokia.com>
 Date: Fri, 12 Feb 2010 09:53:38 +0200
-Subject: [PATCH] camerabin: improve timestamping for viewfinder (Maemo-specific)
+Subject: [PATCH 08/23] camerabin: improve timestamping for viewfinder
+ (Maemo-specific)
 
 Move viewfinder time stamp from state change to first buffer in
 viewfinder element. Also add timestamp for scene mode change.
 ---
- gst/camerabin/gstcamerabin.c |   80 +++++++++++++++++++++++++++++++++++-------
- 1 files changed, 67 insertions(+), 13 deletions(-)
+ gst/camerabin/gstcamerabin.c |   81 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 67 insertions(+), 14 deletions(-)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index c5f5d29..a77480b 100644
+index d89c702..1a47935 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -299,6 +299,12 @@ static gboolean
+@@ -320,6 +320,12 @@ static gboolean
  gst_camerabin_have_src_buffer (GstPad * pad, GstBuffer * buffer,
      gpointer u_data);
  
@@ -26,7 +27,7 @@ index c5f5d29..a77480b 100644
  static void gst_camerabin_reset_to_view_finder (GstCameraBin * camera);
  
  static void gst_camerabin_do_stop (GstCameraBin * camera);
-@@ -667,6 +673,11 @@ camerabin_create_view_elements (GstCameraBin * camera)
+@@ -696,6 +702,11 @@ camerabin_create_view_elements (GstCameraBin * camera)
    const GList *pads;
    GstBin *cbin = GST_BIN (camera);
  
@@ -36,9 +37,9 @@ index c5f5d29..a77480b 100644
 +#endif
 +
    if (!(camera->view_in_sel =
-           gst_camerabin_create_and_add_element (cbin, "input-selector"))) {
-     goto error;
-@@ -714,6 +725,19 @@ camerabin_create_view_elements (GstCameraBin * camera)
+           gst_camerabin_create_and_add_element (cbin, "input-selector",
+               NULL))) {
+@@ -747,6 +758,19 @@ camerabin_create_view_elements (GstCameraBin * camera)
    } else {
      if (!gst_camerabin_add_element (cbin, camera->view_sink))
        goto error;
@@ -58,7 +59,7 @@ index c5f5d29..a77480b 100644
    }
  
    return TRUE;
-@@ -1750,6 +1774,11 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
+@@ -1800,6 +1824,11 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
    GstMessage *msg;
    gboolean ret = FALSE;
  
@@ -68,9 +69,9 @@ index c5f5d29..a77480b 100644
 +#endif
 +
    GST_DEBUG_OBJECT (camera, "creating preview");
+ 
    CP ("CAMERABIN CREATE PREVIEW");
-   pipeline = (camera->mode == MODE_IMAGE) ?
-@@ -1767,6 +1796,20 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
+@@ -1819,6 +1848,20 @@ gst_camerabin_send_preview (GstCameraBin * camera, GstBuffer * buffer)
  
      GST_DEBUG_OBJECT (camera, "sending message with preview image");
  
@@ -91,7 +92,7 @@ index c5f5d29..a77480b 100644
      if (gst_element_post_message (GST_ELEMENT (camera), msg) == FALSE) {
        GST_WARNING_OBJECT (camera,
            "This element has no bus, therefore no message sent!");
-@@ -2029,6 +2072,29 @@ gst_camerabin_have_queue_data (GstPad * pad, GstMiniObject * mini_obj,
+@@ -2078,6 +2121,30 @@ gst_camerabin_have_queue_data (GstPad * pad, GstMiniObject * mini_obj,
    return ret;
  }
  
@@ -118,21 +119,22 @@ index c5f5d29..a77480b 100644
 +  return TRUE;
 +}
 +#endif
++
  /*
   * gst_camerabin_reset_to_view_finder:
   * @camera: camerabin object
-@@ -3797,9 +3863,7 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
- {
+@@ -3891,10 +3958,6 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
    GstCameraBin *camera = GST_CAMERABIN (element);
    GstStateChangeReturn ret;
+ 
 -#ifdef GST_TIMESTAMPS
 -  gboolean measure = FALSE;
 -#endif
-+
+-
    GST_DEBUG_OBJECT (element, "changing state: %s -> %s",
        gst_element_state_get_name (GST_STATE_TRANSITION_CURRENT (transition)),
        gst_element_state_get_name (GST_STATE_TRANSITION_NEXT (transition)));
-@@ -3821,10 +3885,6 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
+@@ -3916,10 +3979,6 @@ gst_camerabin_change_state (GstElement * element, GstStateChange transition)
      case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
        /* If using autovideosink, set view finder sink properties
           now that actual sink has been created. */
@@ -142,8 +144,8 @@ index c5f5d29..a77480b 100644
 -#endif
        camerabin_setup_view_elements (camera);
        break;
-     case GST_STATE_CHANGE_READY_TO_NULL:
-@@ -3888,12 +3948,6 @@ done:
+     case GST_STATE_CHANGE_PAUSED_TO_READY:
+@@ -3995,12 +4054,6 @@ done:
        gst_element_state_get_name (GST_STATE_TRANSITION_NEXT (transition)),
        gst_element_state_change_return_get_name (ret));
  
@@ -156,3 +158,6 @@ index c5f5d29..a77480b 100644
    return ret;
  }
  
+-- 
+1.7.10.4
+

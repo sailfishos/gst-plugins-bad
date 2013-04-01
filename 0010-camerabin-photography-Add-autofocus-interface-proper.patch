@@ -1,5 +1,20 @@
+From 6b6326c0c2655f805b84df1e1cc2c526412049d0 Mon Sep 17 00:00:00 2001
+From: Mohammed Sameer <msameer@foolab.org>
+Date: Sun, 17 Feb 2013 21:42:45 +0200
+Subject: [PATCH 10/23] camerabin: photography: Add autofocus interface
+ property
+
+This patch adds the autofocus interface property to GstPhotography
+I am not the author of the patch and I don't know the real author.
+I just had to convert it to a git am compatible patch.
+---
+ gst-libs/gst/interfaces/photography.c |    6 ++++++
+ gst-libs/gst/interfaces/photography.h |    1 +
+ gst/camerabin/gstcamerabin-enum.h     |    3 ++-
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
 diff --git a/gst-libs/gst/interfaces/photography.c b/gst-libs/gst/interfaces/photography.c
-index 0f52a32..1bd91f0 100644
+index d8a9b50..ffb1146 100644
 --- a/gst-libs/gst/interfaces/photography.c
 +++ b/gst-libs/gst/interfaces/photography.c
 @@ -670,6 +670,12 @@ gst_photography_iface_class_init (gpointer g_class)
@@ -16,7 +31,7 @@ index 0f52a32..1bd91f0 100644
    g_object_interface_install_property (g_class,
        g_param_spec_flags (GST_PHOTOGRAPHY_PROP_NOISE_REDUCTION,
 diff --git a/gst-libs/gst/interfaces/photography.h b/gst-libs/gst/interfaces/photography.h
-index b2037cc..9b87e14 100644
+index 82a9843..348b74c 100644
 --- a/gst-libs/gst/interfaces/photography.h
 +++ b/gst-libs/gst/interfaces/photography.h
 @@ -71,6 +71,7 @@ G_BEGIN_DECLS
@@ -28,10 +43,10 @@ index b2037cc..9b87e14 100644
  /**
   * GstPhotography:
 diff --git a/gst/camerabin/gstcamerabin-enum.h b/gst/camerabin/gstcamerabin-enum.h
-index 69d7ba2..21b6ab8 100644
+index b848047..7fbe6c8 100644
 --- a/gst/camerabin/gstcamerabin-enum.h
 +++ b/gst/camerabin/gstcamerabin-enum.h
-@@ -69,7 +69,8 @@ enum
+@@ -70,7 +70,8 @@ enum
    ARG_VIDEO_CAPTURE_FRAMERATE,
    ARG_PREVIEW_SOURCE_FILTER,
    ARG_READY_FOR_CAPTURE,
@@ -41,3 +56,6 @@ index 69d7ba2..21b6ab8 100644
  };
  
  /**
+-- 
+1.7.10.4
+

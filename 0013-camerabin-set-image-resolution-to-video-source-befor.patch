@@ -1,19 +1,20 @@
-From a1f9b62e2ec5126d584ad04f71bc7bd1d831f3e6 Mon Sep 17 00:00:00 2001
+From 5bf3beea3b71b93cb5c2a1f05494a426f872a404 Mon Sep 17 00:00:00 2001
 From: Lasse Laukkanen <ext-lasse.2.laukkanen@nokia.com>
 Date: Tue, 25 May 2010 15:34:03 +0300
-Subject: [PATCH] camerabin: set image resolution to video source before starting capture
+Subject: [PATCH 13/23] camerabin: set image resolution to video source before
+ starting capture
 
 This allows v4l2camsrc to preallocate memory for still image frame
 before the actual capture sequence.
 ---
  gst/camerabin/gstcamerabin.c |   24 ++++++++++++++++++++++++
- 1 files changed, 24 insertions(+), 0 deletions(-)
+ 1 file changed, 24 insertions(+)
 
 diff --git a/gst/camerabin/gstcamerabin.c b/gst/camerabin/gstcamerabin.c
-index 87bd3f4..dba61fc 100644
+index ecb526e..492373e 100644
 --- a/gst/camerabin/gstcamerabin.c
 +++ b/gst/camerabin/gstcamerabin.c
-@@ -4259,6 +4259,7 @@ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
+@@ -4394,6 +4394,7 @@ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
  {
    GstStructure *structure;
    GstCaps *new_caps = NULL;
@@ -21,7 +22,7 @@ index 87bd3f4..dba61fc 100644
  
    g_return_if_fail (camera != NULL);
  
-@@ -4270,6 +4271,11 @@ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
+@@ -4405,6 +4406,11 @@ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
      new_caps = gst_caps_new_simple (gst_structure_get_name (structure),
          "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, NULL);
  
@@ -33,7 +34,7 @@ index 87bd3f4..dba61fc 100644
      /* Set allowed framerate for the resolution. */
      gst_camerabin_set_allowed_framerate (camera, new_caps);
    }
-@@ -4280,6 +4286,18 @@ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
+@@ -4415,6 +4421,18 @@ gst_camerabin_set_image_capture_caps (GstCameraBin * camera, gint width,
    camera->image_capture_caps_update = FALSE;
    if (new_caps)
      gst_caps_unref (new_caps);
@@ -52,7 +53,7 @@ index 87bd3f4..dba61fc 100644
  }
  
  static void
-@@ -4288,6 +4306,12 @@ gst_camerabin_set_image_resolution (GstCameraBin * camera, gint width,
+@@ -4423,6 +4441,12 @@ gst_camerabin_set_image_resolution (GstCameraBin * camera, gint width,
  {
    g_object_set (camera, "image-capture-width", (guint16) width,
        "image-capture-height", (guint16) height, NULL);
@@ -65,3 +66,6 @@ index 87bd3f4..dba61fc 100644
  }
  
  /* entry point to initialize the plug-in
+-- 
+1.7.10.4
+

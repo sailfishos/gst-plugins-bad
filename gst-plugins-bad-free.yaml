@@ -1,6 +1,6 @@
 Name: gst-plugins-bad-free
 Summary: GStreamer streaming media framework bad-free plug-ins
-Version: 0.10.21
+Version: 0.10.23
 Release: 1
 Group: Applications/Multimedia
 License: LGPLv2+ and LGPLv2
@@ -9,78 +9,54 @@ Sources:
     - gst-plugins-bad-free-%{version}.tar.bz2
     - gst-p-bad-cleanup.sh
 Patches:
-    - 0002-Lower-gettext-requirement-from-0.17-to-0.13.patch
-    - 0003-camerabin-change-default-yuv-format-from-I420-to-UYV.patch
-    - 0004-camerabin-change-video-viewfinder-queue-to-be-leaky-.patch
-    - 0005-camerabin-change-queue-place-in-videobin-Maemo-speci.patch
-    - 0006-camerabin-add-performance-timestamping-Maemo-specifi.patch
-    - 0007-camerabin-set-only-image-color-conversion-flag-by-de.patch
-    - 0008-camerabin-update-v4l2camsrc-driver-name-to-v4l2camex.patch
-    - 0009-camerabin-improve-timestamping-for-viewfinder-Maemo-.patch
-    - 0010-GstPhotography-Added-operation-mode-to-photography-A.patch
-    - 0011-camerabin-photography-Add-autofocus-interface-proper.patch
-    - 0012-camerabin-fix-build-when-enable-timestamps-is-used-m.patch
-    - 0013-camerabin-limit-still-image-capture-frames-memory-us.patch
-    - 0014-camerabin-set-image-resolution-to-video-source-befor.patch
-    - 0015-camerabin-Take-account-sensor-mode-aspect-ratio-when.patch
-    - 0016-camerabin-handle-preview-image-from-video-source.patch
-    - 0017-camerabin-rounding-support-for-framerate-setting.patch
-    - 0018-camerabin-fix-timestamp-for-photo-capture-start-and-.patch
-    - 0019-camerabin-Set-format-to-allow-preallocation-of-buffe.patch
-    - 0020-camerabin-viewfinder-mode-setting-for-subdevsrc.patch
-    - 0021-camerabin-make-sure-that-preview-caps-is-properly-se.patch
-    - 0022-camerabin-Fix-leaked-caps-reference-in-preview_notif.patch
-    - 0023-camerabin-update-framerate-choosing-logic.patch
-    - 0100-extend-photography-iface.patch
+    - 0001-Lower-gettext-requirement-from-0.17-to-0.13.patch
+    - 0002-camerabin-change-default-yuv-format-from-I420-to-UYV.patch
+    - 0003-camerabin-change-video-viewfinder-queue-to-be-leaky-.patch
+    - 0004-camerabin-change-queue-place-in-videobin-Maemo-speci.patch
+    - 0005-camerabin-add-performance-timestamping-Maemo-specifi.patch
+    - 0006-camerabin-set-only-image-color-conversion-flag-by-de.patch
+    - 0007-camerabin-update-v4l2camsrc-driver-name-to-v4l2camex.patch
+    - 0008-camerabin-improve-timestamping-for-viewfinder-Maemo-.patch
+    - 0009-GstPhotography-Added-operation-mode-to-photography-A.patch
+    - 0010-camerabin-photography-Add-autofocus-interface-proper.patch
+    - 0011-camerabin-fix-build-when-enable-timestamps-is-used-m.patch
+    - 0012-camerabin-limit-still-image-capture-frames-memory-us.patch
+    - 0013-camerabin-set-image-resolution-to-video-source-befor.patch
+    - 0014-camerabin-Take-account-sensor-mode-aspect-ratio-when.patch
+    - 0015-camerabin-handle-preview-image-from-video-source.patch
+    - 0016-camerabin-rounding-support-for-framerate-setting.patch
+    - 0017-camerabin-fix-timestamp-for-photo-capture-start-and-.patch
+    - 0018-camerabin-Set-format-to-allow-preallocation-of-buffe.patch
+    - 0019-camerabin-viewfinder-mode-setting-for-subdevsrc.patch
+    - 0020-camerabin-make-sure-that-preview-caps-is-properly-se.patch
+    - 0021-camerabin-Fix-leaked-caps-reference-in-preview_notif.patch
+    - 0022-camerabin-update-framerate-choosing-logic.patch
+    - 0023-extend-photography-iface.patch
 Description: |
     GStreamer is a streaming media framework, based on graphs of elements which
     operate on media data.
-    
     This package contains plug-ins that are not tested well enough, or the code
     is not of good enough quality.
 PkgBR:
     - check
     - gettext-devel
-#    - PyXML
-    - orc-devel >= 0.4.5
-#    - wildmidi-devel
 PkgConfigBR:
-#    - gtk-doc
+    - orc-0.4 >= 0.4.5
     - xt
-#    - liboil-0.3
     - gstreamer-0.10
     - gstreamer-plugins-base-0.10
     - libexif
-#    - libiptcdata
-#    - exempi-2.0
 Configure: reconfigure
 ConfigOptions:
-    - --with-package-name='MeeGo GStreamer Bad Free Plugins package'
-    - --with-package-origin='http://www.meego.com'
+    - --with-package-name='Mer GStreamer Bad Free Plugins package'
+    - --with-package-origin='http://www.merproject.org/'
     - --enable-experimental
-    - --disable-gtk-doc 
-#    - --enable-gtk-doc 
-    - --disable-debug
+    - --disable-gtk-doc
     - --disable-nls
     - --enable-orc
-#disable-nls to reduce size
-#LocaleName: gst-plugins-bad-0.10
 SubPackages:
-#    - Name: extras
-#      Summary: Extra less often used GStreamer "bad" plugins
-#      Description: |
-#          Extra less often used "bad" plugins which require additional 
-#          libraries to be installed.
-#      Group: Applications/Multimedia
-
     - Name: devel
       Summary: Development tools for GStreamer bad free plugins
       Description: |
           Development files for the GStreamer media framework bad free plug-ins
       Group: Development/Libraries
-
-#    - Name: doc
-#      Summary: API reference for Gstreamer bad free plugins
-#      Group: Documentation
-#      Description: |
-#          Separate documentation sub-package for gstreamer bad free plugins.
