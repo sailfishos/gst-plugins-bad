@@ -174,7 +174,7 @@ rm -rf %{buildroot}/%{_datadir}/gtk-doc
 %{_libdir}/gstreamer-0.10/libgstrawparse.so
 %{_libdir}/gstreamer-0.10/libgstshm.so
 %{_libdir}/gstreamer-0.10/libgstvideomaxrate.so
-%ifarch %{ix86}
+%ifarch %{ix86} x86_64
 %{_libdir}/gstreamer-0.10/libgstreal.so
 %endif
 #debugging plugin
