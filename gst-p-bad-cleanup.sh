@@ -23,7 +23,6 @@ autoconvert
 camerabin
 camerabin2
 debugutils
-h264parse
 jpegformat
 rawparse
 selector
@@ -35,6 +34,7 @@ shm
 videomaxrate
 real
 vp8
+videoparsers
 "
 
 error()
