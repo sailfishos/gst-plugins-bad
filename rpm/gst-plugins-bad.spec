@@ -6,7 +6,7 @@
 
 Summary:     GStreamer streaming media framework "bad" plug-ins
 Name:        %{gstreamer}%{majorminor}-plugins-bad
-Version:     1.8.3
+Version:     1.10.2
 Release:     1
 License:     LGPLv2+
 Group:       Applications/Multimedia
@@ -17,8 +17,11 @@ Patch2:      0002-Keep-video-branch-in-NULL-state.patch
 Patch3:      0003-photography-add-missing-vmethods.patch
 Patch4:      0004-camerabin-install-GST_PHOTOGRAPHY_PROP_EXPOSURE_MODE.patch
 Patch5:      0005-Downgrade-mpeg4videoparse-to-prevent-it-from-being-p.patch
+
+%define sonamever %(echo %{version} | cut -d '+' -f 1)
+
 Requires:      orc >= 0.4.18
-BuildRequires: pkgconfig(gstreamer-plugins-base-1.0)
+BuildRequires: pkgconfig(gstreamer-plugins-base-1.0) >= %{sonamever}
 BuildRequires: check
 BuildRequires: pkgconfig(libexif)
 BuildRequires: pkgconfig(orc-0.4) >= 0.4.18
@@ -27,6 +30,10 @@ BuildRequires: pkgconfig(wayland-egl)
 BuildRequires: pkgconfig(glesv2)
 BuildRequires: pkgconfig(egl)
 BuildRequires: pkgconfig(opus)
+BuildRequires: pkgconfig(xkbcommon)
+BuildRequires: pkgconfig(libxml-2.0)
+BuildRequires: pkgconfig(libssl)
+BuildRequires: pkgconfig(libcrypto)
 BuildRequires: python
 BuildRequires: autoconf
 BuildRequires: automake
@@ -66,6 +73,7 @@ NOCONFIGURE=1 ./autogen.sh
   --enable-debug \
   --disable-static \
   --enable-shared \
+  --disable-introspection \
   --disable-gtk-doc \
   --disable-examples \
   --enable-gtk-doc-html=no \
@@ -97,7 +105,8 @@ NOCONFIGURE=1 ./autogen.sh
   --disable-id3tag --disable-linsys --disable-gsettings --disable-dvb \
   --disable-decklink --disable-accurip --disable-audiofxbad --disable-ivtc \
   --disable-midi --disable-yadif --disable-mpegtsmux \
-  --disable-accurip --disable-autoconvert --disable-gdp
+  --disable-accurip --disable-autoconvert --disable-gdp --disable-dtls \
+  --disable-qt --disable-curl --disable-bz2 --disable-dash --disable-smoothstreaming 
 
 make %{?jobs:-j%jobs}
 
@@ -141,6 +150,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gstreamer-%{majorminor}/libgstnetsim.so
 %{_libdir}/gstreamer-%{majorminor}/libgstrtponvif.so
 %{_libdir}/gstreamer-%{majorminor}/libgstvideoframe_audiolevel.so
+#%{_libdir}/gstreamer-%{majorminor}/libgstdtls.so
+#%{_libdir}/gstreamer-%{majorminor}/libgstdashdemux.so
+#%{_libdir}/gstreamer-%{majorminor}/libgstsmoothstreaming.so
+%{_libdir}/gstreamer-%{majorminor}/libgsttimecode.so
 %{_libdir}/libgstphotography-%{majorminor}.so.*
 %{_libdir}/libgstcodecparsers-%{majorminor}.so.*
 %{_libdir}/libgstinsertbin-%{majorminor}.so.*
@@ -173,6 +186,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gsth264parser.h
 %{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gsth265parser.h
 %{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstjpegparser.h
+%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstjpeg2000sampling.h
 %{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstmpeg4parser.h
 %{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstmpegvideometa.h
 %{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstmpegvideoparser.h
@@ -195,8 +209,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/gstfragment.h
 %{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/gsturidownloader.h
 %{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/gsturidownloader_debug.h
-%{_includedir}/gstreamer-%{majorminor}/gst/gl/egl/gsteglimagememory.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/egl/gstgldisplay_egl.h
+%{_includedir}/gstreamer-%{majorminor}/gst/gl/egl/gsteglimage.h
+%{_includedir}/gstreamer-%{majorminor}/gst/gl/egl/gstglmemoryegl.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gl.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/glprototypes/all_functions.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/glprototypes/base.h
@@ -223,6 +238,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglupload.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglutils.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglwindow.h
+%{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglrenderbuffer.h
 %if %{with X11}
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/x11/gstgldisplay_x11.h
 %endif
