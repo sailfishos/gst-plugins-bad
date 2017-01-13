@@ -105,7 +105,7 @@ NOCONFIGURE=1 ./autogen.sh
   --disable-id3tag --disable-linsys --disable-gsettings --disable-dvb \
   --disable-decklink --disable-accurip --disable-audiofxbad --disable-ivtc \
   --disable-midi --disable-yadif --disable-mpegtsmux \
-  --disable-accurip --disable-autoconvert --disable-gdp --disable-dtls \
+  --disable-accurip --disable-autoconvert --disable-gdp \
   --disable-qt --disable-curl --disable-bz2 --disable-dash --disable-smoothstreaming 
 
 make %{?jobs:-j%jobs}
@@ -150,7 +150,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gstreamer-%{majorminor}/libgstnetsim.so
 %{_libdir}/gstreamer-%{majorminor}/libgstrtponvif.so
 %{_libdir}/gstreamer-%{majorminor}/libgstvideoframe_audiolevel.so
-#%{_libdir}/gstreamer-%{majorminor}/libgstdtls.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdtls.so
 #%{_libdir}/gstreamer-%{majorminor}/libgstdashdemux.so
 #%{_libdir}/gstreamer-%{majorminor}/libgstsmoothstreaming.so
 %{_libdir}/gstreamer-%{majorminor}/libgsttimecode.so
