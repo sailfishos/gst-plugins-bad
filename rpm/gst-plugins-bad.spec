@@ -30,6 +30,7 @@ BuildRequires: pkgconfig(wayland-egl)
 BuildRequires: pkgconfig(glesv2)
 BuildRequires: pkgconfig(egl)
 BuildRequires: pkgconfig(opus)
+BuildRequires: pkgconfig(libwebp)
 BuildRequires: pkgconfig(xkbcommon)
 BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(libssl)
@@ -154,6 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 #%{_libdir}/gstreamer-%{majorminor}/libgstdashdemux.so
 #%{_libdir}/gstreamer-%{majorminor}/libgstsmoothstreaming.so
 %{_libdir}/gstreamer-%{majorminor}/libgsttimecode.so
+%{_libdir}/gstreamer-%{majorminor}/libgstwebp.so
 %{_libdir}/libgstphotography-%{majorminor}.so.*
 %{_libdir}/libgstcodecparsers-%{majorminor}.so.*
 %{_libdir}/libgstinsertbin-%{majorminor}.so.*
