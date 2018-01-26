@@ -6,7 +6,7 @@
 
 Summary:     GStreamer streaming media framework "bad" plug-ins
 Name:        %{gstreamer}%{majorminor}-plugins-bad
-Version:     1.10.4
+Version:     1.12.4
 Release:     1
 License:     LGPLv2+
 Group:       Applications/Multimedia
@@ -109,7 +109,7 @@ NOCONFIGURE=1 ./autogen.sh
   --disable-accurip --disable-autoconvert --disable-gdp \
   --disable-qt --disable-curl --disable-bz2 --disable-dash --disable-smoothstreaming 
 
-make %{?jobs:-j%jobs}
+make %{?_smp_mflags}
 
 %install
 %make_install
@@ -137,9 +137,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{_libdir}/gstreamer-%{majorminor}/libgstjpegformat.so
-%{_libdir}/gstreamer-%{majorminor}/libgstrawparse.so
+%{_libdir}/gstreamer-%{majorminor}/libgstlegacyrawparse.so
 %{_libdir}/gstreamer-%{majorminor}/libgstshm.so
-%{_libdir}/gstreamer-%{majorminor}/libgstcamerabin2.so
+%{_libdir}/gstreamer-%{majorminor}/libgstcamerabin.so
 %{_libdir}/gstreamer-%{majorminor}/libgstvideoparsersbad.so
 %{_libdir}/gstreamer-%{majorminor}/libgstaudiomixer.so
 %{_libdir}/gstreamer-%{majorminor}/libgstcompositor.so
@@ -156,6 +156,8 @@ rm -rf $RPM_BUILD_ROOT
 #%{_libdir}/gstreamer-%{majorminor}/libgstsmoothstreaming.so
 %{_libdir}/gstreamer-%{majorminor}/libgsttimecode.so
 %{_libdir}/gstreamer-%{majorminor}/libgstwebp.so
+%{_libdir}/gstreamer-%{majorminor}/libgstaudiobuffersplit.so
+%{_libdir}/gstreamer-%{majorminor}/libgstaudiomixmatrix.so
 %{_libdir}/libgstphotography-%{majorminor}.so.*
 %{_libdir}/libgstcodecparsers-%{majorminor}.so.*
 %{_libdir}/libgstinsertbin-%{majorminor}.so.*
@@ -168,6 +170,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgstadaptivedemux-%{majorminor}.so.*
 %{_libdir}/libgstbadaudio-%{majorminor}.so.*
 %{_libdir}/libgstplayer-%{majorminor}.so.*
+%{_libdir}/libgstbadallocators-%{majorminor}.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -183,6 +186,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgstadaptivedemux-%{majorminor}.so
 %{_libdir}/libgstbadaudio-%{majorminor}.so
 %{_libdir}/libgstplayer-%{majorminor}.so
+%{_libdir}/libgstbadallocators-%{majorminor}.so
 %{_includedir}/gstreamer-%{majorminor}/gst/interfaces/photography-enumtypes.h
 %{_includedir}/gstreamer-%{majorminor}/gst/interfaces/photography.h
 %{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gsth264parser.h
@@ -247,7 +251,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gstreamer-%{majorminor}/gst/audio/gstaudioaggregator.h
 %{_includedir}/gstreamer-%{majorminor}/gst/base/gstaggregator.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/egl/gstegl.h
-%{_includedir}/gstreamer-%{majorminor}/gst/gl/egl/gstglcontext_egl.h
+%{_includedir}/gstreamer-%{majorminor}/gst/gl/wayland/gstgldisplay_wayland.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/glprototypes/buffers.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/glprototypes/debug.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/glprototypes/query.h
@@ -257,7 +261,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglbasefilter.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglbasememory.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglbuffer.h
-%{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglcontrolbindingproxy.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gstgldebug.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglformat.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/gstglmemorypbo.h
@@ -279,6 +282,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gstreamer-%{majorminor}/gst/player/player.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/gstvideoaggregator.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/gstvideoaggregatorpad.h
+%{_includedir}/gstreamer-%{majorminor}/gst/allocators/badallocators.h
+%{_includedir}/gstreamer-%{majorminor}/gst/allocators/gstphysmemory.h
 %{_libdir}/pkgconfig/gstreamer-plugins-bad-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-codecparsers-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-insertbin-%{majorminor}.pc
@@ -288,4 +293,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/gstreamer-bad-base-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-bad-video-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-player-%{majorminor}.pc
+%{_libdir}/pkgconfig/gstreamer-bad-allocators-%{majorminor}.pc
 %{_libdir}/gstreamer-%{majorminor}/include/gst/gl/gstglconfig.h

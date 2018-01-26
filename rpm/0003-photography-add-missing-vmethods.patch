@@ -35,7 +35,7 @@ diff --git a/gst-libs/gst/interfaces/photography.h b/gst-libs/gst/interfaces/pho
 index e65c0d9..7113387 100644
 --- a/gst-libs/gst/interfaces/photography.h
 +++ b/gst-libs/gst/interfaces/photography.h
-@@ -504,6 +504,18 @@ typedef void (*GstPhotographyCapturePrepared) (gpointer data,
+@@ -501,6 +501,18 @@ typedef void (*GstPhotographyCapturePrepared) (gpointer data,
   * @set_config: vmethod to set all configuration parameters at once
   * @get_config: vmethod to get all configuration parameters at once
   * @get_image_capture_supported_caps: vmethod to get caps describing supported image capture formats
@@ -54,37 +54,25 @@ index e65c0d9..7113387 100644
   *
   * #GstPhotographyInterface interface.
   */
-@@ -559,6 +571,30 @@ typedef struct _GstPhotographyInterface
-     GstPhotographyNoiseReduction * noise_reduction);
-   gboolean (*set_noise_reduction) (GstPhotography * photo,
-     GstPhotographyNoiseReduction noise_reduction);
-+  gboolean (*set_exposure_mode) (GstPhotography * photo,
-+    GstPhotographyExposureMode exposure_mode);
-+  gboolean (*get_exposure_mode) (GstPhotography * photo,
-+    GstPhotographyExposureMode * exposure_mode);
-+  gboolean (*set_analog_gain) (GstPhotography * photo,
-+    gfloat analog_gain);
-+  gboolean (*get_analog_gain) (GstPhotography * photo,
-+    gfloat * analog_gain);
-+  gboolean (*set_lens_focus) (GstPhotography * photo,
-+    gfloat lens_focus);
-+  gboolean (*get_lens_focus) (GstPhotography * photo,
-+    gfloat * lens_focus);
-+  gboolean (*set_color_temperature) (GstPhotography * photo,
-+    guint color_temperature);
-+  gboolean (*get_color_temperature) (GstPhotography * photo,
-+    guint * color_temperature);
-+  gboolean (*set_min_exposure_time) (GstPhotography * photo,
-+    guint min_exposure_time);
-+  gboolean (*get_min_exposure_time) (GstPhotography * photo,
-+    guint * min_exposure_time);
-+  gboolean (*set_max_exposure_time) (GstPhotography * photo,
-+    guint max_exposure_time);
-+  gboolean (*get_max_exposure_time) (GstPhotography * photo,
-+    guint * max_exposure_time);
+@@ -544,6 +556,18 @@ typedef struct _GstPhotographyInterface
  
+   gboolean (*get_noise_reduction)    (GstPhotography * photo, GstPhotographyNoiseReduction * noise_reduction);
+   gboolean (*set_noise_reduction)    (GstPhotography * photo, GstPhotographyNoiseReduction noise_reduction);
++  gboolean (*set_exposure_mode)      (GstPhotography * photo, GstPhotographyExposureMode exposure_mode);
++  gboolean (*get_exposure_mode)      (GstPhotography * photo, GstPhotographyExposureMode * exposure_mode);
++  gboolean (*set_analog_gain)        (GstPhotography * photo, gfloat analog_gain);
++  gboolean (*get_analog_gain)        (GstPhotography * photo, gfloat * analog_gain);
++  gboolean (*set_lens_focus)         (GstPhotography * photo, gfloat lens_focus);
++  gboolean (*get_lens_focus)         (GstPhotography * photo, gfloat * lens_focus);
++  gboolean (*set_color_temperature)  (GstPhotography * photo, guint color_temperature);
++  gboolean (*get_color_temperature)  (GstPhotography * photo, guint * color_temperature);
++  gboolean (*set_min_exposure_time)  (GstPhotography * photo, guint min_exposure_time);
++  gboolean (*get_min_exposure_time)  (GstPhotography * photo, guint * min_exposure_time);
++  gboolean (*set_max_exposure_time)  (GstPhotography * photo, guint max_exposure_time);
++  gboolean (*get_max_exposure_time)  (GstPhotography * photo, guint * max_exposure_time);
+ 
+   /* FIXME: remove padding, not needed for interfaces */
    /*< private > */
-   gpointer _gst_reserved[GST_PADDING];
 -- 
 1.8.4.rc3
 
