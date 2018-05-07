@@ -12,7 +12,7 @@ diff --git a/gst-libs/gst/interfaces/photography.c b/gst-libs/gst/interfaces/pho
 index 0d58752..ddfb044 100644
 --- a/gst-libs/gst/interfaces/photography.c
 +++ b/gst-libs/gst/interfaces/photography.c
-@@ -727,4 +727,12 @@ gst_photography_iface_class_init (gpointer g_class)
+@@ -723,4 +723,12 @@ gst_photography_iface_class_init (gpointer g_class)
            "Which noise reduction modes are enabled (0 = disabled)",
            GST_TYPE_PHOTOGRAPHY_NOISE_REDUCTION,
            0, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));

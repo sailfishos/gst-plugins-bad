@@ -14,7 +14,7 @@ diff --git a/gst/camerabin2/gstcamerabin2.c b/gst/camerabin2/gstcamerabin2.c
 index c77585a..c101637 100644
 --- a/gst/camerabin2/gstcamerabin2.c
 +++ b/gst/camerabin2/gstcamerabin2.c
-@@ -976,10 +976,10 @@ gst_camera_bin_video_reset_elements (gpointer u_data)
+@@ -953,10 +953,10 @@ gst_camera_bin_video_reset_elements (gpointer u_data)
    gst_camera_bin_finish_video_file (camerabin);
  
    /* reset element states to clear eos/flushing pads */
