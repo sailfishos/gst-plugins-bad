@@ -1,9 +1,6 @@
 %define majorminor   1.0
 %define gstreamer    gstreamer
 
-# Conditional building of X11 related things
-%bcond_with X11
-
 Summary:     GStreamer streaming media framework "bad" plug-ins
 Name:        %{gstreamer}%{majorminor}-plugins-bad
 Version:     1.14.1
@@ -23,6 +20,7 @@ Patch5:      0005-Downgrade-mpeg4videoparse-to-prevent-it-from-being-p.patch
 Requires:      orc >= 0.4.18
 BuildRequires: pkgconfig(gstreamer-plugins-base-1.0) >= %{sonamever}
 BuildRequires: check
+BuildRequires: pkgconfig(nice) >= 0.1.14
 BuildRequires: pkgconfig(libexif)
 BuildRequires: pkgconfig(orc-0.4) >= 0.4.18
 BuildRequires: pkgconfig(libgcrypt)
@@ -35,6 +33,7 @@ BuildRequires: pkgconfig(xkbcommon)
 BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(libssl)
 BuildRequires: pkgconfig(libcrypto)
+BuildRequires: pkgconfig(libsrtp2)
 BuildRequires: python
 BuildRequires: autoconf
 BuildRequires: automake
@@ -82,11 +81,7 @@ NOCONFIGURE=1 ./autogen.sh
   --disable-nls \
   --enable-orc \
   --enable-gles2 \
-%if %{with X11}
-  --enable-x11=yes \
-%else
   --enable-x11=no \
-%endif
   --disable-adpcmdec --disable-adpcmenc --disable-asfmux \
   --disable-audiovisualizers --disable-bayer \
   --disable-cdxaparse --disable-coloreffects --disable-dataurisrc \
@@ -160,6 +155,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gstreamer-%{majorminor}/libgstlegacyrawparse.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopenglmixers.so
 %{_libdir}/gstreamer-%{majorminor}/libgstproxy.so
+%{_libdir}/gstreamer-%{majorminor}/libgstsrtp.so
+%{_libdir}/gstreamer-%{majorminor}/libgstwebrtc.so
 %{_libdir}/libgstphotography-%{majorminor}.so.*
 %{_libdir}/libgstcodecparsers-%{majorminor}.so.*
 %{_libdir}/libgstinsertbin-%{majorminor}.so.*
@@ -215,9 +212,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/gstfragment.h
 %{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/gsturidownloader.h
 %{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/gsturidownloader_debug.h
-%if %{with X11}
-%{_includedir}/gstreamer-%{majorminor}/gst/gl/x11/gstgldisplay_x11.h
-%endif
 %{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-g-main-context-signal-dispatcher.h
 %{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-media-info.h
 %{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-signal-dispatcher.h
