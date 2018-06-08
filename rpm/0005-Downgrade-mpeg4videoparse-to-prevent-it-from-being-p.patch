@@ -12,7 +12,7 @@ diff --git a/gst/videoparsers/plugin.c b/gst/videoparsers/plugin.c
 index 79d1df6..bac4141 100644
 --- a/gst/videoparsers/plugin.c
 +++ b/gst/videoparsers/plugin.c
-@@ -45,7 +45,7 @@ plugin_init (GstPlugin * plugin)
+@@ -46,7 +46,7 @@ plugin_init (GstPlugin * plugin)
    ret |= gst_element_register (plugin, "mpegvideoparse",
        GST_RANK_PRIMARY + 1, GST_TYPE_MPEGVIDEO_PARSE);
    ret |= gst_element_register (plugin, "mpeg4videoparse",
@@ -20,7 +20,7 @@ index 79d1df6..bac4141 100644
 +      GST_RANK_NONE, GST_TYPE_MPEG4VIDEO_PARSE);
    ret |= gst_element_register (plugin, "pngparse",
        GST_RANK_PRIMARY, GST_TYPE_PNG_PARSE);
-   ret |= gst_element_register (plugin, "h265parse",
+   ret |= gst_element_register (plugin, "jpeg2000parse",
 -- 
 1.8.4.rc3
 
