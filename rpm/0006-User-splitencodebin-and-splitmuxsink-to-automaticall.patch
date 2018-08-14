@@ -1,0 +1,49 @@
+From 7ca7fabc85879b193f1e2893e2db92defc401e8f Tue, 14 Aug 2018 18:29:43 +0200
+From: Andrew Branson <andrew.branson@jollamobile.com>
+Date: Tue, 14 Aug 2018 17:50:44 +0200
+Subject: [PATCH] User splitencodebin and splitmuxsink to automatically roll recordings before they get too large.
+
+diff --git a/gst/camerabin2/gstcamerabin2.c b/gst/camerabin2/gstcamerabin2.c
+index 0e4a3c7..d23833d 100644
+--- a/gst/camerabin2/gstcamerabin2.c
++++ b/gst/camerabin2/gstcamerabin2.c
+@@ -1510,9 +1510,9 @@
+     }
+ 
+     camera->video_encodebin =
+-        gst_element_factory_make ("encodebin", "video-encodebin");
++        gst_element_factory_make ("splitencodebin", "video-encodebin");
+     if (!camera->video_encodebin) {
+-      missing_element_name = "encodebin";
++      missing_element_name = "splitencodebin";
+       goto missing_element;
+     }
+     camera->video_encodebin_signal_id =
+@@ -1520,12 +1520,12 @@
+         (GCallback) encodebin_element_added, camera);
+ 
+     camera->videosink =
+-        gst_element_factory_make ("filesink", "videobin-filesink");
++        gst_element_factory_make ("splitmuxsink", "videobin-filesink");
+     if (!camera->videosink) {
+-      missing_element_name = "filesink";
++      missing_element_name = "splitmuxsink";
+       goto missing_element;
+     }
+-    g_object_set (camera->videosink, "async", FALSE, NULL);
++    g_object_set (camera->videosink, "max-size-bytes", 20971520, NULL);
+ 
+     /* audio elements */
+     if (!camera->audio_volume) {
+@@ -1615,8 +1615,9 @@
+         gst_object_ref (camera->imagesink),
+         gst_object_ref (camera->viewfinderbin_queue), NULL);
+ 
+-    gst_element_link_pads_full (camera->video_encodebin, "src",
+-        camera->videosink, "sink", GST_PAD_LINK_CHECK_NOTHING);
++    //gst_element_link_pads_full (camera->video_encodebin, "src",
++    //    camera->videosink, "video", GST_PAD_LINK_CHECK_NOTHING);
++    g_object_set (camera->video_encodebin, "renderer", camera->videosink, NULL);
+     gst_element_link_pads_full (camera->image_encodebin, "src",
+         camera->imagesink, "sink", GST_PAD_LINK_CHECK_NOTHING);
+     gst_element_link_pads_full (camera->viewfinderbin_queue, "src",
