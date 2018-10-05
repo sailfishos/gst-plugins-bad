@@ -16,6 +16,7 @@ Patch4:      0004-camerabin-install-GST_PHOTOGRAPHY_PROP_EXPOSURE_MODE.patch
 Patch5:      0005-Downgrade-mpeg4videoparse-to-prevent-it-from-being-p.patch
 Patch6:      0006-jifmux-cope-with-missing-EOI-marker.patch
 Patch7:      0007-Add-android-color-tone-modes.patch
+Patch8:      0008-Add-android-scene-modes.patch
 
 %define sonamever %(echo %{version} | cut -d '+' -f 1)
 
