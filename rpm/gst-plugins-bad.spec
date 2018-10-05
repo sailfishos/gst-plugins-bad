@@ -67,6 +67,7 @@ are not tested well enough, or the code is not of good enough quality.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %build
 NOCONFIGURE=1 ./autogen.sh
