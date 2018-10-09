@@ -14,6 +14,7 @@ Patch2:      0002-Keep-video-branch-in-NULL-state.patch
 Patch3:      0003-photography-add-missing-vmethods.patch
 Patch4:      0004-camerabin-install-GST_PHOTOGRAPHY_PROP_EXPOSURE_MODE.patch
 Patch5:      0005-Downgrade-mpeg4videoparse-to-prevent-it-from-being-p.patch
+Patch6:      0006-jifmux-cope-with-missing-EOI-marker.patch
 
 %define sonamever %(echo %{version} | cut -d '+' -f 1)
 
