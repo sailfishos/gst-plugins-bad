@@ -15,6 +15,8 @@ Patch3:      0003-photography-add-missing-vmethods.patch
 Patch4:      0004-camerabin-install-GST_PHOTOGRAPHY_PROP_EXPOSURE_MODE.patch
 Patch5:      0005-Downgrade-mpeg4videoparse-to-prevent-it-from-being-p.patch
 Patch6:      0006-jifmux-cope-with-missing-EOI-marker.patch
+Patch7:      0007-Add-android-color-tone-modes.patch
+Patch8:      0008-Add-android-scene-modes.patch
 
 %define sonamever %(echo %{version} | cut -d '+' -f 1)
 
@@ -65,6 +67,7 @@ are not tested well enough, or the code is not of good enough quality.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %build
 NOCONFIGURE=1 ./autogen.sh
@@ -103,7 +106,7 @@ NOCONFIGURE=1 ./autogen.sh
   --disable-decklink --disable-accurip --disable-audiofxbad --disable-ivtc \
   --disable-midi --disable-yadif --disable-mpegtsmux \
   --disable-accurip --disable-autoconvert --disable-gdp \
-  --disable-qt --disable-curl --disable-bz2 --disable-dash --disable-smoothstreaming 
+  --disable-qt --disable-curl --disable-bz2 --disable-dash --disable-smoothstreaming
 
 make %{?jobs:-j%jobs}
 
