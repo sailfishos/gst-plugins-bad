@@ -1,8 +1,36 @@
+From fc18938d43d774decdb06c61b5aa11c412ca5a17 Mon, 15 Oct 2018 17:39:31 +0200
+From: Adam Pigg <adam@piggz.co.uk>
+Date: Mon, 15 Oct 2018 17:38:55 +0200
+Subject: [PATCH] Add colour tone and scene modes available in the Android HAL
+
 diff --git a/gst-libs/gst/interfaces/photography.h b/gst-libs/gst/interfaces/photography.h
-index 0475d71aa..56537cb0b 100644
+index 0475d71..0720d6d 100644
 --- a/gst-libs/gst/interfaces/photography.h
 +++ b/gst-libs/gst/interfaces/photography.h
-@@ -264,6 +264,12 @@ typedef enum
+@@ -215,6 +215,10 @@
+  * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_WHITEBOARD: Whiteboard (Since 1.2)
+  * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_BLACKBOARD: Blackboard (Since 1.2)
+  * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_AQUA: Aqua (Since 1.2)
++ * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_EMBOSS: Emboss (Since 1.?)
++ * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_SKETCH: Sketch (Since 1.?)
++ * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_NEON: Neon (Since 1.?)
++ *
+  *
+  * Modes for special color effects.
+  */
+@@ -235,7 +239,10 @@
+   GST_PHOTOGRAPHY_COLOR_TONE_MODE_POSTERIZE,
+   GST_PHOTOGRAPHY_COLOR_TONE_MODE_WHITEBOARD,
+   GST_PHOTOGRAPHY_COLOR_TONE_MODE_BLACKBOARD,
+-  GST_PHOTOGRAPHY_COLOR_TONE_MODE_AQUA
++  GST_PHOTOGRAPHY_COLOR_TONE_MODE_AQUA,
++  GST_PHOTOGRAPHY_COLOR_TONE_MODE_EMBOSS,
++  GST_PHOTOGRAPHY_COLOR_TONE_MODE_SKETCH,
++  GST_PHOTOGRAPHY_COLOR_TONE_MODE_NEON
+ } GstPhotographyColorToneMode;
+ 
+ /**
+@@ -264,6 +271,12 @@
   *     of scenes lit by candles (Since 1.2)
   * @GST_PHOTOGRAPHY_SCENE_MODE_BARCODE: Applications are looking for
   *     a barcode (Since 1.2)
@@ -15,7 +43,7 @@ index 0475d71aa..56537cb0b 100644
   *
   * Each mode contains preset #GstPhotography options in order to produce
   * good capturing result in certain scene.
-@@ -287,7 +293,12 @@ typedef enum
+@@ -287,7 +300,12 @@
    GST_PHOTOGRAPHY_SCENE_MODE_FIREWORKS,
    GST_PHOTOGRAPHY_SCENE_MODE_PARTY,
    GST_PHOTOGRAPHY_SCENE_MODE_CANDLELIGHT,
@@ -27,5 +55,5 @@ index 0475d71aa..56537cb0b 100644
 +  GST_PHOTOGRAPHY_SCENE_MODE_AR,
 +  GST_PHOTOGRAPHY_SCENE_MODE_HDR
  } GstPhotographySceneMode;
-
+ 
  /**
