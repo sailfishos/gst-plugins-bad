@@ -12,7 +12,7 @@ diff --git a/gst/jpegformat/gstjifmux.c b/gst/jpegformat/gstjifmux.c
 index 28638b7..4c66591 100644
 --- a/gst/jpegformat/gstjifmux.c
 +++ b/gst/jpegformat/gstjifmux.c
-@@ -328,6 +328,7 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
+@@ -327,6 +327,7 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
  
      if (marker == SOS) {
        gint eoi_pos = -1;
@@ -20,7 +20,7 @@ index 28638b7..4c66591 100644
        gint i;
  
        /* search the last 5 bytes for the EOI marker */
-@@ -335,6 +336,7 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
+@@ -334,6 +335,7 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
        for (i = 5; i >= 2; i--) {
          if (map.data[map.size - i] == 0xFF && map.data[map.size - i + 1] == EOI) {
            eoi_pos = map.size - i;
@@ -28,7 +28,7 @@ index 28638b7..4c66591 100644
            break;
          }
        }
-@@ -350,6 +352,10 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
+@@ -349,6 +351,10 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
          goto error;
  
        GST_DEBUG_OBJECT (self, "scan data, size = %u", self->priv->scan_size);
