@@ -103,7 +103,7 @@ NOCONFIGURE=1 ./autogen.sh
   --disable-vmnc --disable-y4m --disable-fbdev --disable-vcd \
   --disable-id3tag --disable-linsys --disable-gsettings --disable-dvb \
   --disable-decklink --disable-accurip --disable-audiofxbad --disable-ivtc \
-  --disable-midi --disable-yadif --disable-mpegtsmux \
+  --disable-kms --disable-midi --disable-yadif --disable-mpegtsmux \
   --disable-accurip --disable-autoconvert --disable-gdp \
   --disable-qt --disable-curl --disable-bz2 --disable-dash --disable-smoothstreaming
 
