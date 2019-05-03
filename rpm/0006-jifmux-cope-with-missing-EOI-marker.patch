@@ -31,7 +31,7 @@ index 28638b7..4c66591 100644
 @@ -349,6 +351,10 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
          goto error;
  
-       GST_DEBUG_OBJECT (self, "scan data, size = %u", self->priv->scan_size);
+       GST_DEBUG_OBJECT (self, "scan data, size = %u", self->scan_size);
 +
 +      /* If we cannot find EOI marker, we assume the rest of the data is scan data */
 +      if (!eoi_found)

@@ -3,7 +3,7 @@
 
 Summary:     GStreamer streaming media framework "bad" plug-ins
 Name:        %{gstreamer}%{majorminor}-plugins-bad
-Version:     1.14.1
+Version:     1.16.1
 Release:     1
 License:     LGPLv2+
 Group:       Applications/Multimedia
@@ -27,6 +27,7 @@ BuildRequires: pkgconfig(libexif)
 BuildRequires: pkgconfig(orc-0.4) >= 0.4.18
 BuildRequires: pkgconfig(libgcrypt)
 BuildRequires: pkgconfig(wayland-egl)
+BuildRequires: pkgconfig(wayland-protocols) >= 1.15
 BuildRequires: pkgconfig(glesv2)
 BuildRequires: pkgconfig(egl)
 BuildRequires: pkgconfig(opus)
@@ -35,10 +36,18 @@ BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(libssl)
 BuildRequires: pkgconfig(libcrypto)
 BuildRequires: pkgconfig(libsrtp2)
+BuildRequires: pkgconfig(gobject-introspection-1.0)
+BuildRequires: pkgconfig(libusb-1.0)
+BuildRequires: pkgconfig(gudev-1.0)
+BuildRequires: pkgconfig(pangocairo)
+BuildRequires: pkgconfig(libopenjp2)
+BuildRequires: pkgconfig(libgcrypt)
+BuildRequires: pkgconfig(sbc)
+BuildRequires: pkgconfig(libsrtp2)
+BuildRequires: pkgconfig(sndfile)
+BuildRequires: pkgconfig(libdrm)
 BuildRequires: python
-BuildRequires: autoconf
-BuildRequires: automake
-BuildRequires: libtool
+BuildRequires: meson
 BuildRequires: gettext-devel
 
 %description
@@ -69,48 +78,49 @@ are not tested well enough, or the code is not of good enough quality.
 %patch7 -p1
 
 %build
-NOCONFIGURE=1 ./autogen.sh
-%configure \
-  --with-package-name='SailfishOS GStreamer Bad Plug-ins' \
-  --with-package-origin='http://jolla.com' \
-  --enable-debug \
-  --disable-static \
-  --enable-shared \
-  --disable-introspection \
-  --disable-gtk-doc \
-  --disable-examples \
-  --enable-gtk-doc-html=no \
-  --enable-gtk-doc-pdf=no \
-  --disable-nls \
-  --enable-orc \
-  --enable-gles2 \
-  --enable-x11=no \
-  --disable-adpcmdec --disable-adpcmenc --disable-asfmux \
-  --disable-audiovisualizers --disable-bayer \
-  --disable-cdxaparse --disable-coloreffects --disable-dataurisrc \
-  --disable-dccp --disable-debugutils --disable-dvbsuboverlay \
-  --disable-dvdspu --disable-faceoverlay --disable-festival --disable-fieldanalysis \
-  --disable-freeverb --disable-frei0r --disable-gaudieffects \
-  --disable-geometrictransform --disable-hdvparse --disable-inter --disable-interlace \
-  --disable-ivfparse --disable-jp2kdecimator --disable-librfb \
-  --disable-liveadder --disable-mpegdemux --disable-mpegtsmux \
-  --disable-mpegpsmux --disable-mve --disable-mxf \
-  --disable-nuvdemux --disable-patchdetect --disable-pcapparse \
-  --disable-pnm --disable-real --disable-removesilence --disable-sdi \
-  --disable-sdp --disable-segmentclip --disable-siren --disable-smooth \
-  --disable-speed --disable-subenc --disable-stereo --disable-tta \
-  --disable-videofilters --disable-videomeasure --disable-videosignal \
-  --disable-vmnc --disable-y4m --disable-fbdev --disable-vcd \
-  --disable-id3tag --disable-linsys --disable-gsettings --disable-dvb \
-  --disable-decklink --disable-accurip --disable-audiofxbad --disable-ivtc \
-  --disable-kms --disable-midi --disable-yadif --disable-mpegtsmux \
-  --disable-accurip --disable-autoconvert --disable-gdp \
-  --disable-qt --disable-curl --disable-bz2 --disable-dash --disable-smoothstreaming
 
-make %{?jobs:-j%jobs}
+# OBS inserts --auto-features=enabled to verify that every plugin is
+# specified one way or the other. Add this below for testing.
+%meson \
+  -Dpackage-name='SailfishOS GStreamer package plugins (bad set)' \
+  -Dpackage-origin='http://sailfishos.org/' -Dorc=enabled \
+  -Dintrospection=enabled -Dexamples=disabled -Dnls=disabled \
+  -Daccurip=disabled -Dadpcmdec=disabled -Dadpcmenc=disabled -Daom=disabled \
+  -Dasfmux=disabled -D=assrender=disabled -Daudiofxbad=disabled \
+  -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled \
+  -Dbluez=disabled -Dbs2b=disabled -Dbz2=disabled -Dchromaprint=disabled \
+  -Dcoloreffects=disabled -Dcurl=disabled -Ddash=disabled -D=dc1394=disabled \
+  -Ddebugutils=disabled -Ddecklink=disabled -D=directfb=disabled \
+  -Ddts=disabled -Ddvb=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled \
+  -Dfaac=disabled -Dfaad=disabled -Dfaceoverlay=disabled -Dfbdev=disabled \
+  -Dfdkaac=disabled -Dfestival=disabled -Dfieldanalysis=disabled \
+  -Dflite=disabled -Dfluidsynth=disabled -Dfreeverb=disabled -Dfrei0r=disabled \
+  -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled \
+  -Dgme=disabled -Dgsm=disabled -Did3tag=disabled -Dinter=disabled \
+  -Dinterlace=disabled -Diqa=disabled -Divfparse=disabled -Divtc=disabled \
+  -Djp2kdecimator=disabled -Dkate=disabled -Dladspa=disabled \
+  -Dlibde265=disabled -Dlibmms=disabled -Dlibrfb=disabled -Dlv2=disabled \
+  -Dmidi=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmpegpsmux=disabled \
+  -Dmpegtsmux=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=disabled \
+  -Dmxf=disabled -Dneon=disabled -Dnvdec=disabled -Dnvenc=disabled \
+  -Dofa=disabled -Dopenal=disabled -Dopencv=disabled -Dopenexr=disabled \
+  -Dopenh264=disabled -Dopenmpt=disabled -Dopenni2=disabled -Dopensles=disabled \
+  -Dpcapparse=disabled -Dpnm=disabled -Dremovesilence=disabled \
+  -Dresindvd=disabled -Drsvg=disabled -Drtmp=disabled -Dsctp=disabled \
+  -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled -Dsmooth=disabled \
+  -Dsmoothstreaming=disabled -Dsoundtouch=disabled -Dspandsp=disabled \
+  -Dspeed=disabled -Dsrt=disabled -Dsubenc=disabled -Dteletext=disabled \
+  -Dtinyalsa=disabled -Dvdpau=disabled -Dvideofilters=disabled \
+  -Dvideosignal=disabled -Dvmnc=disabled -Dvoaacenc=disabled \
+  -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=disabled \
+  -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwpe=disabled -Dx11=disabled \
+  -Dx265=disabled -Dy4m=disabled -Dyadif=disabled -Dzbar=disabled \
+  -Dcolormanagement=disabled
+
+%meson_build
 
 %install
-%make_install
+%meson_install
 
 # Clean out files that should not be part of the rpm.
 rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/*.la
@@ -137,7 +147,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gstreamer-%{majorminor}/libgstjpegformat.so
 %{_libdir}/gstreamer-%{majorminor}/libgstshm.so
 %{_libdir}/gstreamer-%{majorminor}/libgstvideoparsersbad.so
-%{_libdir}/gstreamer-%{majorminor}/libgstcompositor.so
 %{_libdir}/gstreamer-%{majorminor}/libgsthls.so
 %{_libdir}/gstreamer-%{majorminor}/libgstmpegtsdemux.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopusparse.so
@@ -146,8 +155,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gstreamer-%{majorminor}/libgstrtponvif.so
 %{_libdir}/gstreamer-%{majorminor}/libgstvideoframe_audiolevel.so
 %{_libdir}/gstreamer-%{majorminor}/libgstdtls.so
-#%{_libdir}/gstreamer-%{majorminor}/libgstdashdemux.so
-#%{_libdir}/gstreamer-%{majorminor}/libgstsmoothstreaming.so
 %{_libdir}/gstreamer-%{majorminor}/libgsttimecode.so
 %{_libdir}/gstreamer-%{majorminor}/libgstwebp.so
 %{_libdir}/gstreamer-%{majorminor}/libgstaudiobuffersplit.so
@@ -156,22 +163,33 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gstreamer-%{majorminor}/libgstcamerabin.so
 %{_libdir}/gstreamer-%{majorminor}/libgstipcpipeline.so
 %{_libdir}/gstreamer-%{majorminor}/libgstlegacyrawparse.so
-%{_libdir}/gstreamer-%{majorminor}/libgstopenglmixers.so
 %{_libdir}/gstreamer-%{majorminor}/libgstproxy.so
 %{_libdir}/gstreamer-%{majorminor}/libgstsrtp.so
 %{_libdir}/gstreamer-%{majorminor}/libgstwebrtc.so
+%{_libdir}/gstreamer-%{majorminor}/libgstclosedcaption.so
+%{_libdir}/gstreamer-%{majorminor}/libgstmpegpsdemux.so
+%{_libdir}/gstreamer-%{majorminor}/libgstopenjpeg.so
+%{_libdir}/gstreamer-%{majorminor}/libgstsbc.so
+%{_libdir}/gstreamer-%{majorminor}/libgstsndfile.so
+%{_libdir}/gstreamer-%{majorminor}/libgstttmlsubs.so
+%{_libdir}/gstreamer-%{majorminor}/libgstuvch264.so
+%{_libdir}/gstreamer-%{majorminor}/libgstkms.so
 %{_libdir}/libgstphotography-%{majorminor}.so.*
 %{_libdir}/libgstcodecparsers-%{majorminor}.so.*
 %{_libdir}/libgstinsertbin-%{majorminor}.so.*
 %{_libdir}/libgsturidownloader-%{majorminor}.so.*
 %{_libdir}/libgstbasecamerabinsrc-%{majorminor}.so.*
 %{_libdir}/libgstmpegts-%{majorminor}.so.*
-%{_libdir}/libgstbadvideo-%{majorminor}.so.*
 %{_libdir}/libgstadaptivedemux-%{majorminor}.so.*
 %{_libdir}/libgstbadaudio-%{majorminor}.so.*
 %{_libdir}/libgstplayer-%{majorminor}.so.*
 %{_libdir}/libgstisoff-%{majorminor}.so.*
 %{_libdir}/libgstwebrtc-%{majorminor}.so.*
+%{_libdir}/libgstsctp-%{majorminor}.so.*
+%{_libdir}/girepository-1.0/GstInsertBin-1.0.typelib
+%{_libdir}/girepository-1.0/GstMpegts-1.0.typelib
+%{_libdir}/girepository-1.0/GstPlayer-1.0.typelib
+%{_libdir}/girepository-1.0/GstWebRTC-1.0.typelib
 
 %files devel
 %defattr(-,root,root,-)
@@ -181,75 +199,33 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgstmpegts-%{majorminor}.so
 %{_libdir}/libgsturidownloader-%{majorminor}.so
 %{_libdir}/libgstbasecamerabinsrc-%{majorminor}.so
-%{_libdir}/libgstbadvideo-%{majorminor}.so
 %{_libdir}/libgstadaptivedemux-%{majorminor}.so
 %{_libdir}/libgstbadaudio-%{majorminor}.so
 %{_libdir}/libgstplayer-%{majorminor}.so
 %{_libdir}/libgstisoff-%{majorminor}.so
 %{_libdir}/libgstwebrtc-%{majorminor}.so
-%{_includedir}/gstreamer-%{majorminor}/gst/interfaces/photography-enumtypes.h
-%{_includedir}/gstreamer-%{majorminor}/gst/interfaces/photography.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gsth264parser.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gsth265parser.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstjpegparser.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstjpeg2000sampling.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstmpeg4parser.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstmpegvideometa.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstmpegvideoparser.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstvc1parser.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstvp8parser.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstvp8rangedecoder.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/gstvp9parser.h
+%{_libdir}/libgstsctp-%{majorminor}.so
+%{_includedir}/gstreamer-%{majorminor}/gst/interfaces/photography*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/*.h
 %{_includedir}/gstreamer-%{majorminor}/gst/insertbin/gstinsertbin.h
-%{_includedir}/gstreamer-%{majorminor}/gst/basecamerabinsrc/gstbasecamerasrc.h
-%{_includedir}/gstreamer-%{majorminor}/gst/basecamerabinsrc/gstcamerabin-enum.h
-%{_includedir}/gstreamer-%{majorminor}/gst/basecamerabinsrc/gstcamerabinpreview.h
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/gst-atsc-section.h
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/gst-dvb-descriptor.h
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/gst-dvb-section.h
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/gstmpegtsdescriptor.h
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/gstmpegtssection.h
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/mpegts.h
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/gstmpegts-enumtypes.h
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/gst-scte-section.h
-%{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/gstfragment.h
-%{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/gsturidownloader.h
-%{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/gsturidownloader_debug.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-g-main-context-signal-dispatcher.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-media-info.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-signal-dispatcher.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-types.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-video-overlay-video-renderer.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-video-renderer.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer-visualization.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/player.h
-%{_includedir}/gstreamer-%{majorminor}/gst/video/gstvideoaggregator.h
-%{_includedir}/gstreamer-%{majorminor}/gst/video/gstvideoaggregatorpad.h
-%{_includedir}/gstreamer-%{majorminor}/gst/audio/audio-bad-prelude.h
-%{_includedir}/gstreamer-%{majorminor}/gst/audio/gstnonstreamaudiodecoder.h
-%{_includedir}/gstreamer-%{majorminor}/gst/basecamerabinsrc/basecamerabinsrc-prelude.h
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers/codecparsers-prelude.h
-%{_includedir}/gstreamer-%{majorminor}/gst/interfaces/photography-prelude.h
+%{_includedir}/gstreamer-%{majorminor}/gst/basecamerabinsrc/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/player/gstplayer*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/player/player*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/audio/*.h
 %{_includedir}/gstreamer-%{majorminor}/gst/isoff/gstisoff.h
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts/mpegts-prelude.h
-%{_includedir}/gstreamer-%{majorminor}/gst/player/player-prelude.h
-%{_includedir}/gstreamer-%{majorminor}/gst/uridownloader/uridownloader-prelude.h
-%{_includedir}/gstreamer-%{majorminor}/gst/video/video-bad-prelude.h
-%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/dtlstransport.h
-%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/icetransport.h
-%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/rtcsessiondescription.h
-%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/rtpreceiver.h
-%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/rtpsender.h
-%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/rtptransceiver.h
-%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/webrtc-enumtypes.h
-%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/webrtc.h
-%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/webrtc_fwd.h
+%{_includedir}/gstreamer-%{majorminor}/gst/webrtc/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/sctp/*.h
 %{_libdir}/pkgconfig/gstreamer-plugins-bad-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-codecparsers-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-insertbin-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-mpegts-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-bad-audio-%{majorminor}.pc
-%{_libdir}/pkgconfig/gstreamer-bad-video-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-player-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-webrtc-%{majorminor}.pc
+%{_libdir}/pkgconfig/gstreamer-sctp-%{majorminor}.pc
+%{_datadir}/gir-1.0/GstInsertBin-1.0.gir
+%{_datadir}/gir-1.0/GstMpegts-1.0.gir
+%{_datadir}/gir-1.0/GstPlayer-1.0.gir
+%{_datadir}/gir-1.0/GstWebRTC-1.0.gir
