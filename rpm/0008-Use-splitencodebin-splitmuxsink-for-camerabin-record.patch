@@ -1,0 +1,117 @@
+From 822a731e4acb2d20839261538c8eb4b42c404df1 Mon, 5 Aug 2019 11:26:35 +0200
+From: Andrew Branson <andrew.branson@jollamobile.com>
+Date: Mon, 5 Aug 2019 11:25:47 +0200
+Subject: [PATCH] Use splitencodebin/splitmuxsink for camerabin recordings, to support rollover.
+
+diff --git a/gst/camerabin2/gstcamerabin2.c b/gst/camerabin2/gstcamerabin2.c
+index 0e4a3c7..9dfc871 100644
+--- a/gst/camerabin2/gstcamerabin2.c
++++ b/gst/camerabin2/gstcamerabin2.c
+@@ -207,6 +207,8 @@
+   PROP_MAX_ZOOM,
+   PROP_IMAGE_ENCODING_PROFILE,
+   PROP_IDLE,
++  PROP_MAX_FILESIZE,
++  PROP_STOP_AT_MAX,
+   PROP_FLAGS,
+   PROP_AUDIO_FILTER
+ };
+@@ -812,6 +814,18 @@
+           "The caps that the camera source can produce on the viewfinder pad",
+           GST_TYPE_CAPS, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+ 
++  g_object_class_install_property (object_class,
++      PROP_MAX_FILESIZE,
++      g_param_spec_int ("max-size", "Maximum filesize before rollover/stop in MB",
++          "Maximum filesize per file before rolling to a new file. 0 - no limit", 0, G_MAXINT,
++          0, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++
++  g_object_class_install_property (object_class,
++      PROP_STOP_AT_MAX,
++      g_param_spec_boolean ("stop-at-max", "Stop recording at max size",
++          "Whether the recording should stop when the max size is reached, rather than rollover",
++          FALSE, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
++
+    /**
+     * GstCameraBin:flags
+     *
+@@ -1044,6 +1058,9 @@
+ 
+         GST_LOG_OBJECT (bin, "received preview-image message");
+         dec_counter = TRUE;
++      } else if (gst_structure_has_name (structure, "format-location-full") && camerabin->stop_at_max) {
++          GST_LOG_OBJECT (bin, "Stopping recording because of rollover when stop-at-max is true");
++          gst_camera_bin_stop_capture(camerabin);
+       }
+     }
+       break;
+@@ -1510,22 +1527,22 @@
+     }
+ 
+     camera->video_encodebin =
+-        gst_element_factory_make ("encodebin", "video-encodebin");
++        gst_element_factory_make ("splitencodebin", "video-encodebin");
+     if (!camera->video_encodebin) {
+-      missing_element_name = "encodebin";
++      missing_element_name = "splitencodebin";
+       goto missing_element;
+     }
+     camera->video_encodebin_signal_id =
+         g_signal_connect (camera->video_encodebin, "element-added",
+         (GCallback) encodebin_element_added, camera);
+ 
+-    camera->videosink =
+-        gst_element_factory_make ("filesink", "videobin-filesink");
++    g_object_get (camera->video_encodebin, "muxer", camera->videosink, NULL);
+     if (!camera->videosink) {
+-      missing_element_name = "filesink";
++      missing_element_name = "splitmuxsink";
+       goto missing_element;
+     }
+-    g_object_set (camera->videosink, "async", FALSE, NULL);
++    //g_object_set (camera->videosink, "async", FALSE, NULL);
++    g_object_set(camera->videosink, "max-size-bytes", camera->max_size*1024*1024);
+ 
+     /* audio elements */
+     if (!camera->audio_volume) {
+@@ -1610,13 +1627,10 @@
+ 
+     gst_bin_add_many (GST_BIN_CAST (camera),
+         gst_object_ref (camera->video_encodebin),
+-        gst_object_ref (camera->videosink),
+         gst_object_ref (camera->image_encodebin),
+         gst_object_ref (camera->imagesink),
+         gst_object_ref (camera->viewfinderbin_queue), NULL);
+ 
+-    gst_element_link_pads_full (camera->video_encodebin, "src",
+-        camera->videosink, "sink", GST_PAD_LINK_CHECK_NOTHING);
+     gst_element_link_pads_full (camera->image_encodebin, "src",
+         camera->imagesink, "sink", GST_PAD_LINK_CHECK_NOTHING);
+     gst_element_link_pads_full (camera->viewfinderbin_queue, "src",
+@@ -2383,6 +2398,12 @@
+     case PROP_FLAGS:
+       g_value_set_flags (value, camera->flags);
+       break;
++    case PROP_MAX_FILESIZE:
++      g_value_set_int (value, camera->max_size);
++      break;
++    case PROP_STOP_AT_MAX:
++      g_value_set_boolean (value, camera->stop_at_max);
++      break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;
+diff --git a/gst/camerabin2/gstcamerabin2.h b/gst/camerabin2/gstcamerabin2.h
+index ba55a7e..26b264e 100644
+--- a/gst/camerabin2/gstcamerabin2.h
++++ b/gst/camerabin2/gstcamerabin2.h
+@@ -149,6 +149,9 @@
+   GstCamFlags flags;
+ 
+   gboolean elements_created;
++
++  gint max_size;
++  gboolean stop_at_max;
+ };
+ 
+ struct _GstCameraBin2Class

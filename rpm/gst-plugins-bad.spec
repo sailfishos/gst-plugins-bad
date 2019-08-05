@@ -16,6 +16,7 @@ Patch4:      0004-camerabin-install-GST_PHOTOGRAPHY_PROP_EXPOSURE_MODE.patch
 Patch5:      0005-Downgrade-mpeg4videoparse-to-prevent-it-from-being-p.patch
 Patch6:      0006-jifmux-cope-with-missing-EOI-marker.patch
 Patch7:      0007-Add-colour-tone-and-scene-modes.patch
+Patch8:      0008-Use-splitencodebin-splitmuxsink-for-camerabin-record.patch
 
 %define sonamever %(echo %{version} | cut -d '+' -f 1)
 
@@ -76,6 +77,7 @@ are not tested well enough, or the code is not of good enough quality.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 %build
 
