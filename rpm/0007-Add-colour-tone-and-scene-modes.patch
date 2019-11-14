@@ -8,12 +8,12 @@ index 0475d71..0720d6d 100644
 --- a/gst-libs/gst/interfaces/photography.h
 +++ b/gst-libs/gst/interfaces/photography.h
 @@ -215,6 +215,10 @@
-  * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_WHITEBOARD: Whiteboard (Since 1.2)
-  * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_BLACKBOARD: Blackboard (Since 1.2)
-  * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_AQUA: Aqua (Since 1.2)
-+ * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_EMBOSS: Emboss (Since 1.?)
-+ * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_SKETCH: Sketch (Since 1.?)
-+ * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_NEON: Neon (Since 1.?)
+  * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_WHITEBOARD: Whiteboard (Since: 1.2)
+  * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_BLACKBOARD: Blackboard (Since: 1.2)
+  * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_AQUA: Aqua (Since: 1.2)
++ * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_EMBOSS: Emboss (Since: 1.?)
++ * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_SKETCH: Sketch (Since: 1.?)
++ * @GST_PHOTOGRAPHY_COLOR_TONE_MODE_NEON: Neon (Since: 1.?)
 + *
   *
   * Modes for special color effects.
@@ -33,11 +33,11 @@ index 0475d71..0720d6d 100644
 @@ -264,6 +271,11 @@
   *     of scenes lit by candles (Since 1.2)
   * @GST_PHOTOGRAPHY_SCENE_MODE_BARCODE: Applications are looking for
-  *     a barcode (Since 1.2)
-+ * @GST_PHOTOGRAPHY_SCENE_MODE_BACKLIGHT: Backlit photos (Since 1.?)
-+ * @GST_PHOTOGRAPHY_SCENE_MODE_FLOWERS: For shooting flowers (Since 1.?)
-+ * @GST_PHOTOGRAPHY_SCENE_MODE_AR: Specific for Augmented Reality (Since 1.?)
-+ * @GST_PHOTOGRAPHY_SCENE_MODE_HDR: High Dynamic Range photography (Since 1.?)
+  *     a barcode (Since: 1.2)
++ * @GST_PHOTOGRAPHY_SCENE_MODE_BACKLIGHT: Backlit photos (Since: 1.?)
++ * @GST_PHOTOGRAPHY_SCENE_MODE_FLOWERS: For shooting flowers (Since: 1.?)
++ * @GST_PHOTOGRAPHY_SCENE_MODE_AR: Specific for Augmented Reality (Since: 1.?)
++ * @GST_PHOTOGRAPHY_SCENE_MODE_HDR: High Dynamic Range photography (Since: 1.?)
 + *
   *
   * Each mode contains preset #GstPhotography options in order to produce
