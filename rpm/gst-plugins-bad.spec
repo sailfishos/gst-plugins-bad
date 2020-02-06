@@ -46,7 +46,6 @@ BuildRequires: pkgconfig(sbc)
 BuildRequires: pkgconfig(libsrtp2)
 BuildRequires: pkgconfig(sndfile)
 BuildRequires: pkgconfig(libdrm)
-BuildRequires: python
 BuildRequires: meson
 BuildRequires: gettext-devel
 
