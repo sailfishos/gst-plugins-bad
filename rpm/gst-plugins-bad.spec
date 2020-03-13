@@ -89,7 +89,7 @@ are not tested well enough, or the code is not of good enough quality.
   -Daudiovisualizers=disabled -Dautoconvert=disabled -Dbayer=disabled \
   -Dbluez=disabled -Dbs2b=disabled -Dbz2=disabled -Dchromaprint=disabled \
   -Dcoloreffects=disabled -Dcurl=disabled -Ddash=disabled -D=dc1394=disabled \
-  -Ddebugutils=disabled -Ddecklink=disabled -D=directfb=disabled \
+  -Ddebugutils=enabled -Ddecklink=disabled -D=directfb=disabled \
   -Ddts=disabled -Ddvb=disabled -Ddvbsuboverlay=disabled -Ddvdspu=disabled \
   -Dfaac=disabled -Dfaad=disabled -Dfaceoverlay=disabled -Dfbdev=disabled \
   -Dfdkaac=disabled -Dfestival=disabled -Dfieldanalysis=disabled \
@@ -173,6 +173,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gstreamer-%{majorminor}/libgstttmlsubs.so
 %{_libdir}/gstreamer-%{majorminor}/libgstuvch264.so
 %{_libdir}/gstreamer-%{majorminor}/libgstkms.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdebugutilsbad.so
 %{_libdir}/libgstphotography-%{majorminor}.so.*
 %{_libdir}/libgstcodecparsers-%{majorminor}.so.*
 %{_libdir}/libgstinsertbin-%{majorminor}.so.*
