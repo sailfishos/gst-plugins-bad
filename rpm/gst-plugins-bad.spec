@@ -3,10 +3,9 @@
 
 Summary:     GStreamer streaming media framework "bad" plug-ins
 Name:        %{gstreamer}%{majorminor}-plugins-bad
-Version:     1.16.1
+Version:     1.16.2
 Release:     1
 License:     LGPLv2+
-Group:       Applications/Multimedia
 URL:         http://gstreamer.freedesktop.org/
 Source:      http://gstreamer.freedesktop.org/src/gst-plugins-bad/gstreamer1.0-plugins-bad-%{version}.tar.xz
 Patch1:      0001-Set-video-branch-to-NULL-after-finishing-video-recor.patch
@@ -55,7 +54,6 @@ operate on media data.
 
 %package devel
 Summary: Development files for the GStreamer media framework "bad" plug-ins
-Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: gstreamer1.0-plugins-base-devel
 
