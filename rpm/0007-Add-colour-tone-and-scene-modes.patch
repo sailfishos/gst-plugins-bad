@@ -31,7 +31,7 @@ index 0475d71..0720d6d 100644
  
  /**
 @@ -264,6 +271,11 @@
-  *     of scenes lit by candles (Since 1.2)
+  *     of scenes lit by candles (Since: 1.2)
   * @GST_PHOTOGRAPHY_SCENE_MODE_BARCODE: Applications are looking for
   *     a barcode (Since: 1.2)
 + * @GST_PHOTOGRAPHY_SCENE_MODE_BACKLIGHT: Backlit photos (Since: 1.?)
