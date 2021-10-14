@@ -1,7 +1,7 @@
-From 60293250b606e384193e1b12775393ac8f4d16a2 Mon Sep 17 00:00:00 2001
+From 16ee3df78ff85244c844dae512659bc4f34afa37 Mon Sep 17 00:00:00 2001
 From: Mohammed Hassan <mohammed.hassan@jolla.com>
 Date: Thu, 30 Oct 2014 15:06:47 +0200
-Subject: [PATCH 5/5] Downgrade mpeg4videoparse to prevent it from being picked
+Subject: [PATCH 3/4] Downgrade mpeg4videoparse to prevent it from being picked
  up
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH 5/5] Downgrade mpeg4videoparse to prevent it from being picked
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gst/videoparsers/plugin.c b/gst/videoparsers/plugin.c
-index 79d1df6..bac4141 100644
+index f4690c466..086bcd261 100644
 --- a/gst/videoparsers/plugin.c
 +++ b/gst/videoparsers/plugin.c
-@@ -46,7 +46,7 @@ plugin_init (GstPlugin * plugin)
+@@ -51,7 +51,7 @@ plugin_init (GstPlugin * plugin)
    ret |= gst_element_register (plugin, "mpegvideoparse",
        GST_RANK_PRIMARY + 1, GST_TYPE_MPEGVIDEO_PARSE);
    ret |= gst_element_register (plugin, "mpeg4videoparse",
@@ -22,5 +22,5 @@ index 79d1df6..bac4141 100644
        GST_RANK_PRIMARY, GST_TYPE_PNG_PARSE);
    ret |= gst_element_register (plugin, "jpeg2000parse",
 -- 
-1.8.4.rc3
+2.25.1
 
