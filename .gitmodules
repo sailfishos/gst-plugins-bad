@@ -1,3 +1,3 @@
 [submodule "gst-plugins-bad"]
 	path = gst-plugins-bad
-	url = https://git.sailfishos.org/mirror/gst-plugins-bad.git
+	url = https://github.com/sailfishos-mirror/gst-plugins-bad.git
