@@ -1,7 +1,7 @@
-From b289c6ca5b60799fb9084c1b4fa41fbee0c0e6d6 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Mohammed Sameer <msameer@foolab.org>
 Date: Mon, 14 Apr 2014 22:26:45 +0300
-Subject: [PATCH 2/4] Keep video branch in NULL state
+Subject: [PATCH] Keep video branch in NULL state
 
 We are locking the state of video branch to NULL and move it to PLAYING
 only when we start recording.
@@ -10,14 +10,14 @@ This is to avoid the 5 seconds timeout issue with qualcomm omx encoders:
 If we move to NULL state without encoding any buffers then kernel driver
 waits for 5 seconds until the encoding task (which is not running) to stop.
 ---
- gst/camerabin2/gstcamerabin2.c | 15 +++++++++++++++
+ .../gst/camerabin2/gstcamerabin2.c                | 15 +++++++++++++++
  1 file changed, 15 insertions(+)
 
-diff --git a/gst/camerabin2/gstcamerabin2.c b/gst/camerabin2/gstcamerabin2.c
-index ace9b7601..0b20fa51f 100644
---- a/gst/camerabin2/gstcamerabin2.c
-+++ b/gst/camerabin2/gstcamerabin2.c
-@@ -387,6 +387,15 @@ gst_camera_bin_start_capture (GstCameraBin2 * camerabin)
+diff --git a/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c b/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
+index fa6fb32a7aecdc79e14048392673598a059c7605..1b0175194246ac7f01a59bc9f10b98bc2667b51d 100644
+--- a/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
++++ b/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
+@@ -392,6 +392,15 @@ gst_camera_bin_start_capture (GstCameraBin2 * camerabin)
      g_free (location);
    }
  
@@ -33,7 +33,7 @@ index ace9b7601..0b20fa51f 100644
    g_signal_emit_by_name (camerabin->src, "start-capture", NULL);
    if (camerabin->mode == MODE_VIDEO) {
      camerabin->audio_send_newseg = TRUE;
-@@ -959,10 +968,15 @@ gst_camera_bin_video_reset_elements (gpointer u_data)
+@@ -964,10 +973,15 @@ gst_camera_bin_video_reset_elements (gpointer u_data)
    gst_element_set_state (camerabin->videobin_capsfilter, GST_STATE_NULL);
    if (camerabin->video_filter) {
      gst_element_set_state (camerabin->video_filter, GST_STATE_NULL);
@@ -49,7 +49,7 @@ index ace9b7601..0b20fa51f 100644
  
    if (camerabin->audio_src) {
      gst_element_set_state (camerabin->audio_capsfilter, GST_STATE_READY);
-@@ -1649,6 +1663,7 @@ gst_camera_bin_create_elements (GstCameraBin2 * camera)
+@@ -1654,6 +1668,7 @@ gst_camera_bin_create_elements (GstCameraBin2 * camera)
       */
      gst_element_set_locked_state (camera->videosink, TRUE);
      gst_element_set_locked_state (camera->imagesink, TRUE);
@@ -57,6 +57,3 @@ index ace9b7601..0b20fa51f 100644
  
      g_object_set (camera->videosink, "location", camera->location, NULL);
      g_object_set (camera->imagesink, "location", camera->location, NULL);
--- 
-2.25.1
-
