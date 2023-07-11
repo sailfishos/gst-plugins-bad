@@ -11,26 +11,26 @@ the rest of the data is scan data.
  1 file changed, 6 insertions(+)
 
 diff --git a/subprojects/gst-plugins-bad/gst/jpegformat/gstjifmux.c b/subprojects/gst-plugins-bad/gst/jpegformat/gstjifmux.c
-index 79241bbbfa86963c7f5601a2721e89d250a623fc..13de65e4c813c2d94ad93812f8d61d5d34c906bb 100644
+index d936b8177fb20cbe8dcb7fd4e70487a81c3fb86d..e19b4ef86d94749604af2aa7c7a7ae547974f7e0 100644
 --- a/subprojects/gst-plugins-bad/gst/jpegformat/gstjifmux.c
 +++ b/subprojects/gst-plugins-bad/gst/jpegformat/gstjifmux.c
-@@ -314,6 +314,7 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
+@@ -315,6 +315,7 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
  
-     if (marker == SOS) {
+     if (marker == GST_JPEG_MARKER_SOS) {
        gint eoi_pos = -1;
 +      gboolean eoi_found = FALSE;
        gint i;
  
        /* search the last 5 bytes for the EOI marker */
-@@ -321,6 +322,7 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
-       for (i = 5; i >= 2; i--) {
-         if (map.data[map.size - i] == 0xFF && map.data[map.size - i + 1] == EOI) {
+@@ -323,6 +324,7 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
+         if (map.data[map.size - i] == 0xFF
+             && map.data[map.size - i + 1] == GST_JPEG_MARKER_EOI) {
            eoi_pos = map.size - i;
 +          eoi_found = TRUE;
            break;
          }
        }
-@@ -336,6 +338,10 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
+@@ -338,6 +340,10 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
          goto error;
  
        GST_DEBUG_OBJECT (self, "scan data, size = %u", self->scan_size);

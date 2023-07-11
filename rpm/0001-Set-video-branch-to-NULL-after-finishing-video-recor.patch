@@ -11,7 +11,7 @@ The only workaround for now is to set them to NULL state and back to PLAYING
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c b/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
-index 6ac5ce4d2112ef60806f8d2cb35cf7f0247456d8..fa6fb32a7aecdc79e14048392673598a059c7605 100644
+index 3824a4b744c21eec5f43b76c0d5e53e7f8c3a366..adbeceacdf5ed52774f510e3a5896da587191ff2 100644
 --- a/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
 +++ b/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
 @@ -960,10 +960,10 @@ gst_camera_bin_video_reset_elements (gpointer u_data)
