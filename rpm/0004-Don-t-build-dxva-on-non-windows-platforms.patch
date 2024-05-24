@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@jolla.com>
+Date: Sat, 25 May 2024 02:01:43 +0300
+Subject: [PATCH] Don't build dxva on non-windows platforms
+
+---
+ subprojects/gst-plugins-bad/gst-libs/gst/dxva/meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/subprojects/gst-plugins-bad/gst-libs/gst/dxva/meson.build b/subprojects/gst-plugins-bad/gst-libs/gst/dxva/meson.build
+index a00d03f25cb88046908568b449059cc7746f2351..6d74bb81a4809c9f2a2f6ffbd57cd56e970d5674 100644
+--- a/subprojects/gst-plugins-bad/gst-libs/gst/dxva/meson.build
++++ b/subprojects/gst-plugins-bad/gst-libs/gst/dxva/meson.build
+@@ -25,7 +25,7 @@ extra_args = [
+   '-DG_LOG_DOMAIN="GStreamer-Dxva"',
+ ]
+ 
+-if host_system != 'windows' and not build_gir
++if host_system != 'windows'
+   subdir_done()
+ endif
+ 
