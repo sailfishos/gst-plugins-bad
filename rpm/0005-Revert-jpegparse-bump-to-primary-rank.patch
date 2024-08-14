@@ -20,7 +20,7 @@ This reverts commit 05d239f63131d832509cead0957ddb3c63a0099d.
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json b/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
-index 022454cac5..366524c31e 100644
+index 8dcd14b3fc..408ec1735f 100644
 --- a/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
 +++ b/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
 @@ -37651,7 +37651,7 @@
