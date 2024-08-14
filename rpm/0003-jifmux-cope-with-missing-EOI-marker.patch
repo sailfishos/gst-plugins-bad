@@ -11,7 +11,7 @@ the rest of the data is scan data.
  1 file changed, 6 insertions(+)
 
 diff --git a/subprojects/gst-plugins-bad/gst/jpegformat/gstjifmux.c b/subprojects/gst-plugins-bad/gst/jpegformat/gstjifmux.c
-index 13930874dc9b6bb622412aa1e32ffb45499fe324..c832bfd4499fb4874c47ca25c24dd058f920a4bf 100644
+index 13930874dc..c832bfd449 100644
 --- a/subprojects/gst-plugins-bad/gst/jpegformat/gstjifmux.c
 +++ b/subprojects/gst-plugins-bad/gst/jpegformat/gstjifmux.c
 @@ -315,6 +315,7 @@ gst_jif_mux_parse_image (GstJifMux * self, GstBuffer * buf)
