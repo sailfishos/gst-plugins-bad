@@ -15,6 +15,7 @@ Patch1:      0001-Set-video-branch-to-NULL-after-finishing-video-recor.patch
 Patch2:      0002-Keep-video-branch-in-NULL-state.patch
 Patch3:      0003-jifmux-cope-with-missing-EOI-marker.patch
 Patch4:      0004-Don-t-build-dxva-on-non-windows-platforms.patch
+Patch5:      0005-Revert-jpegparse-bump-to-primary-rank.patch
 
 %define sonamever %(echo %{version} | cut -d '+' -f 1)
 

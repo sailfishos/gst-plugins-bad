@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Wed, 14 Aug 2024 10:50:28 +0300
+Subject: [PATCH] Revert "jpegparse: bump to primary rank"
+
+With jpegparse having primary rank, it gets automatically added to
+camerabin -> image-encodebin, and messes up the orientation
+with jpeg data received from gst-droid.
+
+As the rank has been none for years and years, wouldn't think anything
+relies on having it autoplugged.
+
+(gst-integration-testsuites/medias checkout not reverted from original
+commit)
+
+This reverts commit 05d239f63131d832509cead0957ddb3c63a0099d.
+---
+ subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json | 2 +-
+ subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json b/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
+index 022454cac5..366524c31e 100644
+--- a/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
++++ b/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
+@@ -37651,7 +37651,7 @@
+                     }
+                 },
+                 "properties": {},
+-                "rank": "primary"
++                "rank": "none"
+             }
+         },
+         "filename": "gstjpegformat",
+diff --git a/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c b/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c
+index 1dda8c5f1a..87ebe00545 100644
+--- a/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c
++++ b/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c
+@@ -106,7 +106,7 @@ static gboolean gst_jpeg_parse_stop (GstBaseParse * parse);
+ 
+ #define gst_jpeg_parse_parent_class parent_class
+ G_DEFINE_TYPE (GstJpegParse, gst_jpeg_parse, GST_TYPE_BASE_PARSE);
+-GST_ELEMENT_REGISTER_DEFINE (jpegparse, "jpegparse", GST_RANK_PRIMARY,
++GST_ELEMENT_REGISTER_DEFINE (jpegparse, "jpegparse", GST_RANK_NONE,
+     GST_TYPE_JPEG_PARSE);
+ 
+ enum GstJPEGColorspace
