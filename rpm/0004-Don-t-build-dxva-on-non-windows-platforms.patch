@@ -8,7 +8,7 @@ Subject: [PATCH] Don't build dxva on non-windows platforms
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/subprojects/gst-plugins-bad/gst-libs/gst/dxva/meson.build b/subprojects/gst-plugins-bad/gst-libs/gst/dxva/meson.build
-index a00d03f25c..6d74bb81a4 100644
+index 6eba003556d28d16a6783c252dfacd40c366d3cf..d9094a809eaf8e69d761eca41e8214f1ef1cd01e 100644
 --- a/subprojects/gst-plugins-bad/gst-libs/gst/dxva/meson.build
 +++ b/subprojects/gst-plugins-bad/gst-libs/gst/dxva/meson.build
 @@ -25,7 +25,7 @@ extra_args = [

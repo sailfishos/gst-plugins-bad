@@ -6,7 +6,7 @@
 
 Summary:     GStreamer streaming media framework "bad" plug-ins
 Name:        %{gstreamer}%{majorminor}-plugins-bad
-Version:     1.24.6
+Version:     1.24.10
 Release:     1
 License:     LGPLv2+
 URL:         http://gstreamer.freedesktop.org/
@@ -136,9 +136,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 # remove waylandsink. It does not run because we do not support all the interfaces it needs.
 rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstwaylandsink.so
 rm -f $RPM_BUILD_ROOT%{_libdir}/libgstwayland-%{majorminor}.so*
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
