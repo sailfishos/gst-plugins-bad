@@ -14,7 +14,7 @@ waits for 5 seconds until the encoding task (which is not running) to stop.
  1 file changed, 15 insertions(+)
 
 diff --git a/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c b/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
-index 80133cc654..0410dd0605 100644
+index 80133cc6542171a9a36a253cbd7a53eef7e21dc9..0410dd0605ff6ae8b3c941be4a26ec198b38b75e 100644
 --- a/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
 +++ b/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
 @@ -392,6 +392,15 @@ gst_camera_bin_start_capture (GstCameraBin2 * camerabin)
