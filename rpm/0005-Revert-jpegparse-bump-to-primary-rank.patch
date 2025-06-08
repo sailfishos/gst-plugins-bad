@@ -20,10 +20,10 @@ This reverts commit 05d239f63131d832509cead0957ddb3c63a0099d.
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json b/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
-index 7884048b5137be7a67549e5076bf97fa3521d112..72859d6458950af2c4ece64fc196d551f60d7df6 100644
+index 772801a9b3acdb29fc799b774254a15445fab05d..6748829aa3b78aa9c8a1ca267d003e004c43b03d 100644
 --- a/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
 +++ b/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
-@@ -37651,7 +37651,7 @@
+@@ -41565,7 +41565,7 @@
                      }
                  },
                  "properties": {},
@@ -33,7 +33,7 @@ index 7884048b5137be7a67549e5076bf97fa3521d112..72859d6458950af2c4ece64fc196d551
          },
          "filename": "gstjpegformat",
 diff --git a/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c b/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c
-index 1dda8c5f1af134fdfd74d246fa2fe2876825a107..87ebe0054536c1299ff17a4611cc38613748be97 100644
+index b69bda4ab8850ae1ef632645267b4d4aa4a95ed3..ba5ec92eff0f16dcbd4d0be4f126a5ea29a4ce7e 100644
 --- a/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c
 +++ b/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c
 @@ -106,7 +106,7 @@ static gboolean gst_jpeg_parse_stop (GstBaseParse * parse);
