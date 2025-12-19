@@ -14,7 +14,7 @@ waits for 5 seconds until the encoding task (which is not running) to stop.
  1 file changed, 15 insertions(+)
 
 diff --git a/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c b/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
-index 80133cc6542171a9a36a253cbd7a53eef7e21dc9..0410dd0605ff6ae8b3c941be4a26ec198b38b75e 100644
+index 709c4b06b6070b207ce2587196d698f7ee222645..d6c2323272d4c2823943c86c5145a685ad19c39d 100644
 --- a/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
 +++ b/subprojects/gst-plugins-bad/gst/camerabin2/gstcamerabin2.c
 @@ -392,6 +392,15 @@ gst_camera_bin_start_capture (GstCameraBin2 * camerabin)
@@ -49,7 +49,7 @@ index 80133cc6542171a9a36a253cbd7a53eef7e21dc9..0410dd0605ff6ae8b3c941be4a26ec19
  
    if (camerabin->audio_src) {
      gst_element_set_state (camerabin->audio_capsfilter, GST_STATE_READY);
-@@ -1654,6 +1668,7 @@ gst_camera_bin_create_elements (GstCameraBin2 * camera)
+@@ -1656,6 +1670,7 @@ gst_camera_bin_create_elements (GstCameraBin2 * camera)
       */
      gst_element_set_locked_state (camera->videosink, TRUE);
      gst_element_set_locked_state (camera->imagesink, TRUE);

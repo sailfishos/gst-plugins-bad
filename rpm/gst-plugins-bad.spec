@@ -6,7 +6,7 @@
 
 Summary:     GStreamer streaming media framework "bad" plug-ins
 Name:        %{gstreamer}%{majorminor}-plugins-bad
-Version:     1.26.2
+Version:     1.26.9
 Release:     1
 License:     LGPLv2+
 URL:         https://github.com/sailfishos/gst-plugins-bad
