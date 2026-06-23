@@ -47,6 +47,7 @@ BuildRequires: pkgconfig(sbc)
 BuildRequires: pkgconfig(libsrtp2)
 BuildRequires: pkgconfig(sndfile)
 BuildRequires: pkgconfig(libdrm)
+# Note: SRC (encoder) is free but SNK (decoder) needs license
 BuildRequires: pkgconfig(ldacBT-enc)
 %ifnarch %{ix86} x86_64
 BuildRequires: libatomic
