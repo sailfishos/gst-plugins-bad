@@ -47,6 +47,7 @@ BuildRequires: pkgconfig(sbc)
 BuildRequires: pkgconfig(libsrtp2)
 BuildRequires: pkgconfig(sndfile)
 BuildRequires: pkgconfig(libdrm)
+BuildRequires: pkgconfig(libfreeaptx)
 %ifnarch %{ix86} x86_64
 BuildRequires: libatomic
 %endif
@@ -107,7 +108,7 @@ GStreamer Plugins Bad library applications
   -Dmidi=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmpegpsmux=disabled \
   -Dmpegtsmux=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=disabled \
   -Dmxf=disabled -Dneon=disabled -Dnvcomp=disabled -Dnvdswrapper=disabled -Donnx=disabled \
-  -Dopenal=disabled -Dopenaptx=disabled -Dopencv=disabled -Dopenexr=disabled \
+  -Dopenal=disabled -Dopenaptx=enabled -Dopencv=disabled -Dopenexr=disabled \
   -Dopenh264=disabled -Dopenmpt=disabled -Dopenni2=disabled -Dopensles=disabled \
   -Dpcapparse=disabled -Dpnm=disabled -Dqroverlay=disabled -Dqsv=disabled \
   -Dqt6d3d11=disabled \
