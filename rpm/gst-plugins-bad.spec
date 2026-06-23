@@ -47,6 +47,8 @@ BuildRequires: pkgconfig(sbc)
 BuildRequires: pkgconfig(libsrtp2)
 BuildRequires: pkgconfig(sndfile)
 BuildRequires: pkgconfig(libdrm)
+# Note: SRC (encoder) is free but SNK (decoder) needs license
+BuildRequires: pkgconfig(ldacBT-enc)
 %ifnarch %{ix86} x86_64
 BuildRequires: libatomic
 %endif
@@ -103,7 +105,7 @@ GStreamer Plugins Bad library applications
   -Disac=disabled -Dinterlace=disabled -Diqa=disabled -Divfparse=disabled \
   -Divtc=disabled -Djp2kdecimator=disabled -Dladspa=disabled -Dlc3=disabled \
   -Dlcevcdecoder=disabled -Dlcevcencoder=disabled \
-  -Dldac=disabled -Dlibde265=disabled -Dlibrfb=disabled -Dlv2=disabled \
+  -Dldac=enabled -Dlibde265=disabled -Dlibrfb=disabled -Dlv2=disabled \
   -Dmidi=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmpegpsmux=disabled \
   -Dmpegtsmux=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=disabled \
   -Dmxf=disabled -Dneon=disabled -Dnvcomp=disabled -Dnvdswrapper=disabled -Donnx=disabled \
