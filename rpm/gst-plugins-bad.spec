@@ -6,7 +6,7 @@
 
 Summary:     GStreamer streaming media framework "bad" plug-ins
 Name:        %{gstreamer}%{majorminor}-plugins-bad
-Version:     1.26.11
+Version:     1.28.6
 Release:     1
 License:     LGPLv2+
 URL:         https://github.com/sailfishos/gst-plugins-bad
@@ -99,12 +99,12 @@ GStreamer Plugins Bad library applications
   -Dfdkaac=disabled -Dfestival=disabled -Dfieldanalysis=disabled \
   -Dflite=disabled -Dfluidsynth=disabled -Dfreeverb=disabled -Dfrei0r=disabled \
   -Dgs=disabled -Dgaudieffects=disabled -Dgdp=disabled -Dgeometrictransform=disabled \
-  -Dgme=disabled -Dgsm=disabled -Dgtk3=disabled -Did3tag=disabled -Dinter=disabled \
+  -Dgme=disabled -Dgsm=disabled -Dgtk3=disabled -Dhip=disabled -Did3tag=disabled -Dinter=disabled \
   -Disac=disabled -Dinterlace=disabled -Diqa=disabled -Divfparse=disabled \
   -Divtc=disabled -Djp2kdecimator=disabled -Dladspa=disabled -Dlc3=disabled \
   -Dlcevcdecoder=disabled -Dlcevcencoder=disabled \
   -Dldac=disabled -Dlibde265=disabled -Dlibrfb=disabled -Dlv2=disabled \
-  -Dmidi=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmpegpsmux=disabled \
+  -Dmidi=disabled -Dmodplug=disabled -Dmpeg2enc=disabled -Dmpeghdec=disabled -Dmpegpsmux=disabled \
   -Dmpegtsmux=disabled -Dmplex=disabled -Dmsdk=disabled -Dmusepack=disabled \
   -Dmxf=disabled -Dneon=disabled -Dnvcomp=disabled -Dnvdswrapper=disabled -Donnx=disabled \
   -Dopenal=disabled -Dopenaptx=disabled -Dopencv=disabled -Dopenexr=disabled \
@@ -115,12 +115,13 @@ GStreamer Plugins Bad library applications
   -Dsctp=enabled -Dsdp=disabled -Dsegmentclip=disabled -Dsiren=disabled \
   -Dsmooth=disabled -Dsmoothstreaming=disabled -Dsoundtouch=disabled \
   -Dspandsp=disabled -Dspeed=disabled -Dsrt=disabled -Dsubenc=disabled \
-  -Dsvtav1=disabled -Dsvtjpegxs=disabled \
-  -Dteletext=disabled -Dtests=disabled -Dtinyalsa=disabled -Dvideofilters=disabled \
-  -Dvideosignal=disabled -Dvmnc=disabled -Dvoaacenc=disabled \
+  -Dsvtav1=disabled -Dsvtjpegxs=disabled -Dteletext=disabled \
+  -Dtflite=disabled -Dtflite-edgetpu=disabled -Dtflite-vsi=disabled \
+  -Dtests=disabled -Dtinyalsa=disabled -Dvideofilters=disabled \
+  -Dvideosignal=disabled -Dvmnc=disabled -Dvoaacenc=disabled -Dvmaf=disabled \
   -Dvoamrwbenc=disabled -Dvulkan=disabled -Dwasapi=disabled -Dwasapi2=disabled \
-  -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwpe=disabled -Dx11=disabled \
-  -Dx265=disabled -Dy4m=disabled -Dzbar=disabled -Dcolormanagement=disabled \
+  -Dwebrtcdsp=disabled -Dwildmidi=disabled -Dwpe=disabled -Dwpe2=disabled -Dx11=disabled \
+  -Dx265=disabled -Dzbar=disabled -Dcolormanagement=disabled \
   -Dmagicleap=disabled -Dva=disabled -Davtp=disabled -Dmicrodns=disabled \
   -Dsvthevcenc=disabled -Dzxing=disabled
 
@@ -216,6 +217,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libgstwayland-%{majorminor}.so*
 %{_libdir}/girepository-1.0/CudaGst-1.0.typelib
 %{_libdir}/girepository-1.0/GstAnalytics-1.0.typelib
 %{_libdir}/girepository-1.0/GstBadAudio-1.0.typelib
+%{_libdir}/girepository-1.0/GstCodecParsers-1.0.typelib
 %{_libdir}/girepository-1.0/GstCodecs-1.0.typelib
 %{_libdir}/girepository-1.0/GstCuda-1.0.typelib
 %{_libdir}/girepository-1.0/GstInsertBin-1.0.typelib
@@ -288,6 +290,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libgstwayland-%{majorminor}.so*
 %{_datadir}/gir-1.0/CudaGst-1.0.gir
 %{_datadir}/gir-1.0/GstAnalytics-1.0.gir
 %{_datadir}/gir-1.0/GstBadAudio-1.0.gir
+%{_datadir}/gir-1.0/GstCodecParsers-1.0.gir
 %{_datadir}/gir-1.0/GstCodecs-1.0.gir
 %{_datadir}/gir-1.0/GstCuda-1.0.gir
 %{_datadir}/gir-1.0/GstInsertBin-1.0.gir
