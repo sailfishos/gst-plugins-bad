@@ -20,10 +20,10 @@ This reverts commit 05d239f63131d832509cead0957ddb3c63a0099d.
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json b/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
-index 9ed31b129c3463ae68076cc207e3eee0e018b94e..b7c16d81ae693bd5a5c3f69fa004941296d47580 100644
+index be922342e112ee6426a54314a159a175268137ba..573df8add9e11d7e6eb22eee42613d9a040c67f8 100644
 --- a/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
 +++ b/subprojects/gst-plugins-bad/docs/plugins/gst_plugins_cache.json
-@@ -41565,7 +41565,7 @@
+@@ -42858,7 +42858,7 @@
                      }
                  },
                  "properties": {},
@@ -33,10 +33,10 @@ index 9ed31b129c3463ae68076cc207e3eee0e018b94e..b7c16d81ae693bd5a5c3f69fa0049412
          },
          "filename": "gstjpegformat",
 diff --git a/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c b/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c
-index b69bda4ab8850ae1ef632645267b4d4aa4a95ed3..ba5ec92eff0f16dcbd4d0be4f126a5ea29a4ce7e 100644
+index c7a711c0d9f10edfea558ba07657fdd21c6da21a..e907ff54addb00f4cd72efea1c87521bdeb70c82 100644
 --- a/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c
 +++ b/subprojects/gst-plugins-bad/gst/jpegformat/gstjpegparse.c
-@@ -106,7 +106,7 @@ static gboolean gst_jpeg_parse_stop (GstBaseParse * parse);
+@@ -107,7 +107,7 @@ static gboolean gst_jpeg_parse_stop (GstBaseParse * parse);
  
  #define gst_jpeg_parse_parent_class parent_class
  G_DEFINE_TYPE (GstJpegParse, gst_jpeg_parse, GST_TYPE_BASE_PARSE);
@@ -44,4 +44,4 @@ index b69bda4ab8850ae1ef632645267b4d4aa4a95ed3..ba5ec92eff0f16dcbd4d0be4f126a5ea
 +GST_ELEMENT_REGISTER_DEFINE (jpegparse, "jpegparse", GST_RANK_NONE,
      GST_TYPE_JPEG_PARSE);
  
- enum GstJPEGColorspace
+ /* CIPA DC-x 007-2009 MPF spec states as TIFF */
